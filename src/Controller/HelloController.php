@@ -27,6 +27,10 @@ class HelloController
 		$this->container->get('test');
 		return $this->container->get('view')->render($response,'hello.twig',['name'=>$name]);
 	}
-
+	
+	public function access_main_page(Request $request,Response $response,array $arg)
+	{
+		return $this->container->get('view')->render($response,'main_page.html');
+	}
 }
 ?>
