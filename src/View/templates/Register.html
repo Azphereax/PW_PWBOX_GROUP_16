@@ -8,28 +8,28 @@
 </ul>
 <br/><br/>
 
-<form method="get" action="{{ path_for('login') }}">
+<form method="post" action="{{ path_for('save_db') }}">
    
    <fieldset>
-       <legend>Register</legend> 
+       <legend>Register Form</legend> 
 
-       <label for="Name">Name </label>
-       <input type="text" name="Name" id="Name" maxlength="20"/><!--//required-->
+       <label for="name">Name </label>
+       <input type="text" name="name" id="name" maxlength="23" required/>
 	   <br/><br/>
 	   <label for="password">password </label>
-       <input type="password" name="password" id="password"/><!-- pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required-->
+       <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
 	   <br/><br/>	
 	   <label for="c_password">Confirm password </label>
-       <input type="password" name="c_password" id="c_password"/><!-- pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required-->
+       <input type="password" name="c_password" id="c_password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
 	   <br/><br/>
 	   <label for="email">Email</label>
-       <input type="email" name="email" id="email" /><!--//required-->
+       <input type="email" name="email" id="email" required />
 	   <br/><br/>
-	   <label for="date">Date</label>
-       <input type="date" name="date" id="date" /><!--//required-->
+	   <label for="birthdate">birthdate</label>
+       <input type="date" name="birthdate" id="birthdate" required />
 	   <br/><br/>
        <p>Description</p>
-	   <textarea name="Description" id="Description" cols="40" rows="5"></textarea>
+	   <textarea name="description" id="description" cols="40" rows="5"></textarea>
 	   <br/><br/>
        <input type="submit"value="Register" />
 

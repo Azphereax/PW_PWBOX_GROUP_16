@@ -7,13 +7,6 @@ use Doctrine\DBAL\Connection;
 
 class DoctrineUserRepository implements UserRepository
 {
-	//TEST
-	private $x = "AA";
-	public function getx(){return $this->x;}
-	//TEST
-	
-	private const DATE_FORMAT ='Y-m-d H:i:s';
-	
 	private $database;
 	
 	public function __construct(Connection $database)
@@ -23,14 +16,41 @@ class DoctrineUserRepository implements UserRepository
 	
 	public function save(User $user)
 	{
-		$sql = "INSERT INTO user(username,email,password,create_at,update_at) VALUES(:username,:email,:password,:create_at,:update_at)";
+		
+		$sql = "INSERT INTO users(name,email,password,birthdate,description) VALUES(:name,:email,:password,:birthdate,:description)";
+		$sql_2="SELECT COUNT(*) AS unique_name from users where name=:name";
+		
 		$stmt = $this->database->prepare($sql);
-		$stmt->bindValue("username",$user->getUsername(),'string');
+		$stmt_2 = $this->database->prepare($sql_2);
+		
+		$stmt->bindValue("name",$user->getName(),'string');
 		$stmt->bindValue("email",$user->getEmail(),'string');
 		$stmt->bindValue("password",$user->getPassword(),'string');
-		$stmt->bindValue("create_at",$user->getCreateAt()->format(self::DATE_FORMAT));
-		$stmt->bindValue("update_at",$user->getUpdateAt()->format(self::DATE_FORMAT));
-		/*$stmt->execute();*/printf("Have been save .");
+		$stmt->bindValue("birthdate",$user->getBirthdate(),'string');
+		$stmt->bindValue("description",$user->getDescription(),'string');
+		
+		$stmt_2->bindValue("name",$user->getName(),'string');
+		$stmt_2->execute();
+		$result=$stmt_2->fetch();
+
+		echo $result['unique_name'];
+		if(!$result['unique_name']){
+		if($stmt->execute()){
+			if (!file_exists('../Cloud_user')) {
+			mkdir('../Cloud_user', 0777, true);
+			}
+			
+			if (!file_exists('../Cloud_user/'.$user->getName())) {
+			if(mkdir('../Cloud_user/'.$user->getName(), 0777, true))printf("<script>alert('User and Storage successfully created.')</script>");;
+			}
+			}else
+			{
+				printf("<script>alert('User not successfully created.')</script>");
+			}
+		}
+		else
+			printf("<script>alert('User already exist.')</script>");
+			
 	}
 }
 
