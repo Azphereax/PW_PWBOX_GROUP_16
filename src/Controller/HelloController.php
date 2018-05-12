@@ -32,5 +32,15 @@ class HelloController
 	{
 		return $this->container->get('view')->render($response,'main_page.html');
 	}
+	
+	public function login(Request $request,Response $response,array $arg)
+	{
+		return $this->container->get('view')->render($response,'login.html');
+	}
+	
+	public function register(Request $request,Response $response,array $arg)
+	{
+		return $this->container->get('view')->render($response,'register.html');
+	}
 }
 ?>

@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block title %}	Hello there!{% endblock %}
 {% block content %}
+<ul>
+		<li><a class="active" href="#">Main page</a></li>
+		<li><a href="{{ path_for('login') }}">Login</a></li>
+	</ul>
+	
 <p>Main page!</p>
 {% endblock %}

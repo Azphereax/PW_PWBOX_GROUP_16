@@ -22,9 +22,9 @@ class SessionMiddleware
 		}
 		else
 		{
-			$next($request,$response);
-			return $response;
-			//return $this->container->get('view')->render($response,'landing.html');
+			//$next($request,$response);
+			//return $response;
+			return $this->container->get('view')->render($response,'landing.html');
 		}
 	}
 }

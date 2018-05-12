@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}	Register{% endblock %}
+{% block content %}
+<ul>
+		<li><a href="{{ path_for('main') }}">Main page</a></li>
+		<li><a href="{{ path_for('login') }}">Login</a></li>
+		<li><a class="active" href="#">Register</a></li>
+</ul>
+<br/><br/>
+
+<form method="get" action="{{ path_for('login') }}">
+   
+   <fieldset>
+       <legend>Register</legend> 
+
+       <label for="Name">Name </label>
+       <input type="text" name="Name" id="Name" maxlength="20"/><!--//required-->
+	   <br/><br/>
+	   <label for="password">password </label>
+       <input type="password" name="password" id="password"/><!-- pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required-->
+	   <br/><br/>	
+	   <label for="c_password">Confirm password </label>
+       <input type="password" name="c_password" id="c_password"/><!-- pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required-->
+	   <br/><br/>
+	   <label for="email">Email</label>
+       <input type="email" name="email" id="email" /><!--//required-->
+	   <br/><br/>
+	   <label for="date">Date</label>
+       <input type="date" name="date" id="date" /><!--//required-->
+	   <br/><br/>
+       <p>Description</p>
+	   <textarea name="Description" id="Description" cols="40" rows="5"></textarea>
+	   <br/><br/>
+       <input type="submit"value="Register" />
+
+   </fieldset>
+</form>
+
+
+
+
+{% endblock %}
