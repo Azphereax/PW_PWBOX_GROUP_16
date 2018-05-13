@@ -14,7 +14,9 @@ public function __construct($id,$name,$email,$password,$birthdate,$description)
 	$this->id= $id;
 	$this->name= $name;
 	$this->email= $email;
-	$this->password= hash("sha256",$password);
+	if($password!=null)
+	$this->password=hash("sha256",$password);
+	else $this->password="";
 	$this->birthdate= $birthdate;
 	$this->description= $description;
 	

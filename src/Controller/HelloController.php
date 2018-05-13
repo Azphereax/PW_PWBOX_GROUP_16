@@ -73,7 +73,7 @@ class HelloController
 			$service= $this->container->get('post_user_use_case');
 			if($data)
 			{
-				$service->save_user($data);
+				$service->save_user($bdd);
 				return $this->container->get('view')->render($response,'login.html');
 			}else
 			{
@@ -109,7 +109,7 @@ class HelloController
 		
 			if($data)
 			{
-				$service->check_user($data);
+				$service->check_user($bdd);
 				return $response;
 			}else
 			{
@@ -135,7 +135,50 @@ class HelloController
 		return $this->container->get('view')->render($response,'landing.html');
 	}
 	
+	public function access_update_profile(Request $request,Response $response)
+	{
+		if(isset($_SESSION['user_logged'])){
+			return $this->container->get('view')->render($response,'update.html',array('name' => $_SESSION['name'],'password' => $_SESSION['password'],'email' => $_SESSION['email'],'birthdate' => $_SESSION['birthdate'],'description' => $_SESSION['description']));
+		}
+		else
+		{
+			return $response->withStatus(403)->withHeader('Content-Type','text/html');
+		}
+	}
 	
+	public function update_profile(Request $request,Response $response)
+	{
+		
+		try
+		{
+			$data = $request->getParsedBody();
+			$bdd = [];
+
+			$bdd['password'] = filter_var($data['password'], FILTER_SANITIZE_STRING);
+			$bdd['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
+			$bdd['name']=$_SESSION['name'];
+			
+			$pass_regex = '/^[A-Za-z0-9]*([A-Z][A-Za-z0-9]*\d|\d[A-Za-z0-9]*[A-Z])[A-Za-z0-9]*$/';
+			
+			$service= $this->container->get('post_user_use_case');
+			
+			if(strlen($bdd['email']) || (strlen($bdd['password'])>=6) || ((strlen($bdd['password'])<=12) && preg_match($pass_regex, $bdd['password'])))
+			{
+				
+				$service->update_user($bdd);
+			}
+			else
+				printf("<script>alert('Error in input.');</script>");
+			return $this->container->get('view')->render($response,'update.html',array('name' => $_SESSION['name'],'password' => $_SESSION['password'],'email' => $_SESSION['email'],'birthdate' => $_SESSION['birthdate'],'description' => $_SESSION['description']));
+
+		}catch(\Exception $e)
+		{
+			$response = $response->withStatus(500)->withHeader('Content-Type','text/html')->write($e->getMessage());
+			
+		}
+		
+		
+	}
 	
 }
 ?>

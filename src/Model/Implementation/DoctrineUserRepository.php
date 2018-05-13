@@ -59,19 +59,59 @@ class DoctrineUserRepository implements UserRepository
 	{
 		
 		$sql="SELECT COUNT(*) AS found_user from users where password=:password and email=:email";
+		$sql_2="SELECT * from users where password=:password and email=:email";
+		
 		$stmt = $this->database->prepare($sql);
+		$stmt_2 = $this->database->prepare($sql_2);
 		
 		$stmt->bindValue("email",$user->getEmail(),'string');
 		$stmt->bindValue("password",$user->getPassword(),'string');
 		
+		$stmt_2->bindValue("email",$user->getEmail(),'string');
+		$stmt_2->bindValue("password",$user->getPassword(),'string');
+		
 		$stmt->execute();
 		$result=$stmt->fetch();
-		//echo "More than one ".$user->getPassword()."<br>".$user->getEmail()."<br>".$result['found_user'];
+		
 		if($result['found_user']==1){
-			$_SESSION['user_logged']=1;	
+			
+			$stmt_2->execute();
+			$result_2=$stmt_2->fetch();
+			$_SESSION['user_logged']=1;
+			$_SESSION['name']=$result_2['name'];
+			$_SESSION['email']=$result_2['email'];
+			$_SESSION['birthdate']=$result_2['birthdate'];
+			$_SESSION['description']=$result_2['description'];
+			$_SESSION['password']=$result_2['password'];
 		}
 		
 		
+	}
+	
+	public function update(User $user)
+	{
+		$email=$user->getEmail();
+		$password=$user->getPassword();
+	
+		
+		if(!strlen($email))
+			$sql = "Update users set password=:password where name=:name";
+		else if(!strlen($password))
+			$sql = "Update users set email=:email where name=:name";
+		else
+			$sql = "Update users set email=:email,password=:password where name=:name";
+		
+		$stmt = $this->database->prepare($sql);
+		
+		$stmt->bindValue("name",$user->getName(),'string');
+		if(strlen($email))$stmt->bindValue("email",$email,'string');
+		if(strlen($password))$stmt->bindValue("password",$password,'string');
+		
+		if($stmt->execute())
+			if(strlen($email))$_SESSION['email']=$email;
+		else
+			printf("<script>alert('Failed update')</script>");
+			
 	}
 }
 

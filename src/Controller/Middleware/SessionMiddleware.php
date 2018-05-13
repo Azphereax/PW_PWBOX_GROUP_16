@@ -11,7 +11,7 @@ class SessionMiddleware
         $this->container = $container;
 	}
 	
-	public function acess_main(Request $request,Response $response,callable $next)
+	public function access_main(Request $request,Response $response,callable $next)
 	{
 		
 		if(isset($_SESSION['user_logged'])){
@@ -25,7 +25,7 @@ class SessionMiddleware
 		}
 	}
 	
-	public function acess_main_from_login(Request $request,Response $response,callable $next)
+	public function access_main_from_login(Request $request,Response $response,callable $next)
 	{
 		
 		

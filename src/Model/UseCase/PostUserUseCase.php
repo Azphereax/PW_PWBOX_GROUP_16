@@ -25,6 +25,13 @@ class PostUserUseCase
 		$this->repo->check($user);
 		
 	}
+	
+	public function update_user(array $user_update)
+	{
+		$user=new User(null,$user_update['name'],$user_update['email'],$user_update['password'],null,null);
+		$this->repo->update($user);
+		
+	}
 }
 
 

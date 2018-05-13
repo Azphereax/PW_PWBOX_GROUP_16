@@ -1,11 +1,10 @@
 {% extends "base.html" %}
-{% block title %}	Hello there!{% endblock %}
+{% block title %}	MAIN PAGE{% endblock %}
 {% block content %}
 <ul>
 		<li><a class="active" href="#">Main page</a></li>
-		<li><a href="{{ path_for('login') }}">Login</a></li>
-		<li><a href="{{ path_for('register') }}">Register</a></li>
-		<li><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		<li><a href="{{ path_for('update_profile') }}">Update Profile</a></li>
+		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
 	</ul>
 	
 <p>Main page!</p>

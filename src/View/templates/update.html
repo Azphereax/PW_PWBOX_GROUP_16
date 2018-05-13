@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}	UPDATE PAGE{% endblock %}
+{% block content %}
+<ul>
+		<li><a class="active" href="#">Update Page</a></li>
+		<li><a href="{{ path_for('register') }}">Register</a></li>
+		<li><a href="{{ path_for('main') }}">Main page</a></li>
+		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+</ul>
+
+ <form method="post" action="{{ path_for('modify_profile') }}">
+   <br/><br/>
+   <fieldset>
+       <legend>Update Form</legend> 
+
+       <label for="email">Email</label>
+       <input type="email" name="email" id="email" value="{{ email }}"/>
+	   <br/><br/>
+	   <label for="password">password </label>
+       <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}"/>
+	   <br/><br/>
+	   <label for="birthday">birthday </label>
+	   <input type="text" name="birthdate" id="birthdate" value="{{ birthdate }}" disabled/>
+	   <br/><br/>
+	   <p>Description</p>
+	   <textarea name="description" id="description" cols="40" rows="5" disabled >{{ description }}</textarea>
+
+	   <br/><br/>
+	   <input type="submit"value="Update"/>
+   </fieldset>
+</form>
+{% endblock %}
