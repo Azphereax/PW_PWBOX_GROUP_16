@@ -2,9 +2,22 @@
 {% block title %}	Login{% endblock %}
 {% block content %}
 <ul>
-		<li><a href="{{ path_for('main') }}">Main page</a></li>
-		<li><a class="active" href="{{ path_for('login') }}">Login</a></li>
-	</ul>
-	
-<p>Login</p>
+	<li><a class="active" href="#">Login</a></li>
+	<li><a href="{{ path_for('register') }}">Register</a></li>
+</ul>
+
+<form method="post" action="{{ path_for('connexion') }}">
+   <br/><br/>
+   <fieldset>
+       <legend>Login Form</legend> 
+
+       <label for="email">Email</label>
+       <input type="email" name="email" id="email" required />
+	   <br/><br/>
+	   <label for="password">password </label>
+       <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
+	   <br/><br/>
+	   <input type="submit"value="Login"/>
+   </fieldset>
+</form>
 {% endblock %}

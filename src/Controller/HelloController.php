@@ -59,9 +59,9 @@ class HelloController
 			
 			$date_regex = '/(19|20)\d\d[- -.](0[1-9]|[12][0-9]|3[01])[- -.](0[1-9]|1[012])/';//yyyy-mm-dd
 			$pass_regex = '/^[A-Za-z0-9]*([A-Z][A-Za-z0-9]*\d|\d[A-Za-z0-9]*[A-Z])[A-Za-z0-9]*$/';
-			if(!((strlen($bdd['name'])<=20) && (strlen($bdd['password'])>=6) && (strlen($bdd['password'])<=12) && (strlen($bdd['password'])<=12) && !strcmp($bdd['password'],$bdd['c_password']) && preg_match($date_regex, $bdd['birthdate']) && preg_match($pass_regex, $bdd['password'])  ))
+			if(!((strlen($bdd['name'])<=20) && (strlen($bdd['password'])>=6) && (strlen($bdd['password'])<=12) && !strcmp($bdd['password'],$bdd['c_password']) && preg_match($date_regex, $bdd['birthdate']) && preg_match($pass_regex, $bdd['password'])  ))
 			$data=null;//Do not save , empty the data 
-		/*
+			/*
 				echo $bdd['birthdate']."<br>";
 				echo "1:".(strlen($bdd['name'])<=20)."<br>";
 				echo "2:".(strlen($bdd['password'])>=6)."<br>";
@@ -73,7 +73,7 @@ class HelloController
 			$service= $this->container->get('post_user_use_case');
 			if($data)
 			{
-				$service($data);
+				$service->save_user($data);
 				return $this->container->get('view')->render($response,'login.html');
 			}else
 			{
@@ -84,10 +84,57 @@ class HelloController
 		}catch(\Exception $e)
 		{
 			$response = $response->withStatus(500)->withHeader('Content-Type','text/html')->write($e->getMessage());
+		}
+		return $response;
+	}
+	
+	public function connexion(Request $request,Response $response)
+	{
+		
+		try
+		{
+			$data = $request->getParsedBody();
+			$bdd = [];
+
+			$bdd['password'] = filter_var($data['password'], FILTER_SANITIZE_STRING);
+			$bdd['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
+			
+			$date_regex = '/(19|20)\d\d[- -.](0[1-9]|[12][0-9]|3[01])[- -.](0[1-9]|1[012])/';//yyyy-mm-dd
+			$pass_regex = '/^[A-Za-z0-9]*([A-Z][A-Za-z0-9]*\d|\d[A-Za-z0-9]*[A-Z])[A-Za-z0-9]*$/';
+			
+			$service= $this->container->get('post_user_use_case');
+			
+			if(!((strlen($bdd['password'])>=6) && (strlen($bdd['password'])<=12) && preg_match($pass_regex, $bdd['password'])))
+			$data=null;//Do not save , empty the data 
+		
+			if($data)
+			{
+				$service->check_user($data);
+				return $response;
+			}else
+			{
+				
+				printf("<script>alert('Error in input.');</script>");
+				return $this->container->get('view')->render($response,'login.html');
+			}
+		
+		}catch(\Exception $e)
+		{
+			$response = $response->withStatus(500)->withHeader('Content-Type','text/html')->write($e->getMessage());
 			
 		}
 		return $response;
 	}
+	
+	public function disconnexion(Request $request,Response $response)
+	{
+		
+		unset($_SESSION['user_logged']);
+		if(session_destroy())echo "<script>alert('Sucessful disconnexion');</script>";
+		else echo "<script>alert('Failed disconnexion');</script>";
+		return $this->container->get('view')->render($response,'landing.html');
+	}
+	
 	
 	
 }

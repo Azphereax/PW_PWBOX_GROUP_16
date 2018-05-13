@@ -1,4 +1,5 @@
 <?php
+session_start();
 require __DIR__ . '/../vendor/autoload.php';
 
 $settings = require __DIR__.'/../app/settings.php';
