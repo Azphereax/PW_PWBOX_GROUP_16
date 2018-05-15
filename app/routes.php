@@ -18,5 +18,6 @@ $app->post('/rename_file','SlimApp\Controller\HelloController:rename_file')->set
 $app->post('/save_database','SlimApp\Controller\HelloController:save_database')->setName('save_db');
 $app->post('/connexion','SlimApp\Controller\HelloController:connexion')->setName('connexion');
 $app->post('/modify_profile','SlimApp\Controller\HelloController:update_profile')->setName('modify_profile');
-
+$app->post('/create_folder','SlimApp\Controller\HelloController:create_folder')->setName('create_folder');
+$app->post('/upload_file','SlimApp\Controller\HelloController:upload_file')->setName('upload_file');
 ?>

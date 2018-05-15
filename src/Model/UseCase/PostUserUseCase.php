@@ -58,6 +58,17 @@ class PostUserUseCase
 	{
 		$this->repo->rename_file($data);
 	}
+	
+	public function create_folder($data)
+	{
+		$this->repo->create_folder($data);
+	}
+	
+	public function upload_file($data)
+	{
+		$this->repo->upload_file($data);
+	}
+	
 }
 
 

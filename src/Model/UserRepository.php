@@ -13,6 +13,9 @@ interface UserRepository
 	public function download_file($path);
 	public function remove_file($path);
 	public function rename_file($data);
+	public function create_folder($data);
+	public function upload_file($data);	
+	
 }
 
 

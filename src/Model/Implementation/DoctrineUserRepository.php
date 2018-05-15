@@ -152,8 +152,9 @@ class DoctrineUserRepository implements UserRepository
 		if($d=@dir($path)){
 			while (($file = $d->read()) !== false){
 			
-			if(strcmp($file,".") && strcmp($file,".."))
-			  array_push($content,array($file,(is_dir($path."/".$file))?"Folder":"File",getcwd()."/".rtrim($path,'.')));
+			if(!strcmp($file,".") || !strcmp($file,".."))
+				array_push($content,array($file,"s",getcwd()."/".rtrim($path,'.')));
+			else array_push($content,array($file,(is_dir($path."/".$file))?"Folder":"File",getcwd()."/".rtrim($path,'.')));
 			}
 			$d->close(); 
 		}
@@ -222,8 +223,35 @@ class DoctrineUserRepository implements UserRepository
 	if(file_exists($data['path'].$data['o_name'])) {
 					if(!rename($data['path'].$data['o_name'],$data['path'].$data['new_name']))echo "<script>alert('Failed rename .');</script>";
 					else echo "<script>alert('Sucessfully rename');</script>";
-			}
+			}else echo "<script>alert('Failed rename .');</script>";
 			$this->main_access(".");
+    }
+	
+	public function create_folder($data){
+			if(@	mkdir($data['path'].$data['name']))
+				echo "<script>alert('Successful created folder');</script>";
+			else
+				echo "<script>alert('Failed created folder (no right or already exists)');</script>";		
+		$this->main_access(".");
+    }
+	
+	public function upload_file($data){
+		$ext=strtolower(pathinfo($data['path'].$_FILES['upload_file']['name'],PATHINFO_EXTENSION));
+		if($ext!="pdf" && $ext!="jpg" && $ext!="png" && $ext!="gif" && $ext!="md" && $ext!="txt")
+			echo "<script>alert('bad file extension.')</script>";
+		else if (file_exists($data['path'].$_FILES['upload_file']['name'])){
+			echo "<script>alert('file already exists.')</script>";
+		}else if ($_FILES["upload_file"]["size"] > 2000000) {
+			echo "<script>alert('file too large.')</script>";
+		}else if (move_uploaded_file($_FILES["upload_file"]["tmp_name"], $data['path'].$_FILES['upload_file']['name'])) {
+			echo "<script>alert('Successful uploaded.')</script>";
+		}
+		else {
+			echo "<script>alert('Failed uploaded.')</script>";
+		}
+			
+			$this->main_access(".");
+		
     }
 	
 }

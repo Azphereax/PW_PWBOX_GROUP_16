@@ -22,7 +22,36 @@
 			alert("Invalid new name");
 		
 	}
+	function create(path){
+		var name =prompt("Name : ");
+		if(name!=""){
+			alert('path='+path+'   name='+name);
+			document.write('<form name="fx" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="name" value='+name+' type="text"></form>');
+			fx.submit();
+		}
+		else
+			alert("Invalid new name");
+		
+	}
+	
+	function upload_file(path){
+		document.write('<form name="f" action="{{ path_for("upload_file") }}" method="post" enctype="multipart/form-data"> <input type="file" name="upload_file" id="upload_file"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
+	}
+	
+	function share(path){
+		var name =prompt("Name : ");
+		if(name!=""){
+			alert('path='+path+'   name='+name);
+			document.write('<form name="fx" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="name" value='+name+' type="text"></form>');
+			fx.submit();
+		}
+		else
+			alert("Invalid new name");
+		
+	}
+	
 	</script>
+	
 	
 	
 
@@ -38,24 +67,38 @@
 		   <th>Rename</th>
        </tr>
    </thead>
-
    <tbody> 
        
-	{% for i in content %}
-		<tr>
-		<td>{{i[0]}} </td>
-		<td>{{i[1]}} </td>
-		{% if i[1] == "Folder" %}
-			<td><a href="{{ path_for('main') }}?folder={{i[0]}}">Enter</a> </td>
+	{% for i in content|reverse %}
+		
+		{% if i[1] != "s" %}
+			<tr>
+			<td>{{i[0]}} </td>
+			<td>{{i[1]}} </td>
+			{% if i[1] == "Folder" %}
+				<td><a href="{{ path_for('main') }}?folder={{i[0]}}">Enter</a> </td>
+			{% endif %}
+			{% if i[1] == "File" %}
+				<td><a href="{{ path_for('download_file') }}?file={{i[2]}}{{i[0]}}">Download</a> </td>
+			{% endif %}
+			<td><a href="{{ path_for('remove_file') }}?remove={{i[2]}}{{i[0]}}">{{i[0]}}</a>  </td>
+			<td><a href="javascript:rename('{{i[2]}}','{{i[0]}}');">{{i[0]}}</a>  </td>
+			</tr>
+		{% elseif  i[0] != "." %}
+			<tr>
+				<td colspan="5"><a href="javascript:upload_file('{{i[2]}}');">Upload new file</a> </td>
+			</tr>
+			<tr>
+				<td colspan="5"><a href="javascript:create('{{i[2]}}');">Create new folder</a></td>
+			</tr>
+			<tr>
+				<td colspan="5"><a href="javascript:share_folder('{{i[2]}}');">Share folder</a> </td>
+			</tr>
 		{% endif %}
-		{% if i[1] == "File" %}
-			<td><a href="{{ path_for('download_file') }}?file={{i[2]}}{{i[0]}}">Download</a> </td>
-		{% endif %}
-		<td><a href="{{ path_for('remove_file') }}?remove={{i[2]}}{{i[0]}}">{{i[0]}}</a>  </td>
-		<td><a href="javascript:rename('{{i[2]}}','{{i[0]}}');">{{i[0]}}</a>  </td>
-		</tr>
 	{% endfor %}
+	
    </tbody>
+	
 </table>
 
 
