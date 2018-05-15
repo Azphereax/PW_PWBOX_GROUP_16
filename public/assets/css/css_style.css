@@ -7,6 +7,8 @@ ul {
 }
 
 li {
+
+	color: white;
     float: left;
 }
 
@@ -14,14 +16,19 @@ li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
+    padding: 20px 50px;
     text-decoration: none;
 }
 
 li a:hover {
     background-color: #40A497;
 }
+
 label { display: block; width: 300px; }
+
+table, th, td,caption {
+   border: 1px solid black;
+}
 
 .active {
     background-color: #4CAF50;

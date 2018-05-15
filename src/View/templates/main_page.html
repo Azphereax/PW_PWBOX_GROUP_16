@@ -2,11 +2,61 @@
 {% block title %}	MAIN PAGE{% endblock %}
 {% block content %}
 <ul>
-		<li><a class="active" href="#">Main page</a></li>
-		<li><a href="{{ path_for('update_profile') }}">Update Profile</a></li>
+		<li><a class="active" href="{{ path_for('main') }}">Main</a></li>
+		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
 		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
 		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
 	</ul>
+	<br><br><br>
 	
-<p>Main page!</p>
+	<script>
+	function rename(path,o_name){
+		var new_name =prompt("New name : ");
+		if(new_name!=""){
+		
+			alert(path+"#"+o_name+" ==> "+new_name);
+			document.write('<form name="ff" action="{{ path_for("rename_file") }}" method="post"><input name="path" value='+path+' type="text"><input name="o_name" value='+o_name+' type="text">	<input name="new_name" value='+new_name+' type="text"></form>');
+			ff.submit();
+		}
+		else
+			alert("Invalid new name");
+		
+	}
+	</script>
+	
+	
+
+	<table>
+   <caption>User : {{ name }} </caption>
+
+   <thead>
+       <tr>
+           <th>Content </th>
+		   <th>Type </th>
+		   <th>Action</th>
+		   <th>Remove</th>
+		   <th>Rename</th>
+       </tr>
+   </thead>
+
+   <tbody> 
+       
+	{% for i in content %}
+		<tr>
+		<td>{{i[0]}} </td>
+		<td>{{i[1]}} </td>
+		{% if i[1] == "Folder" %}
+			<td><a href="{{ path_for('main') }}?folder={{i[0]}}">Enter</a> </td>
+		{% endif %}
+		{% if i[1] == "File" %}
+			<td><a href="{{ path_for('download_file') }}?file={{i[2]}}{{i[0]}}">Download</a> </td>
+		{% endif %}
+		<td><a href="{{ path_for('remove_file') }}?remove={{i[2]}}{{i[0]}}">{{i[0]}}</a>  </td>
+		<td><a href="javascript:rename('{{i[2]}}','{{i[0]}}');">{{i[0]}}</a>  </td>
+		</tr>
+	{% endfor %}
+   </tbody>
+</table>
+
+
 {% endblock %}

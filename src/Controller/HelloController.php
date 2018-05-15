@@ -32,9 +32,13 @@ class HelloController
 	{
 
 	if(isset($_SESSION['user_logged'])){
-			
-		
-			return $this->container->get('view')->render($response,'main_page.html');
+	
+			$get=".";
+			if($data=$request->getParam('folder'))
+			$get=$data;
+			$service= $this->container->get('post_user_use_case');
+			$service->main_access($get);
+			return $this->container->get('view')->render($response,'main_page.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
 		}
 		else
 		{
@@ -111,10 +115,9 @@ class HelloController
 			if($data)
 			{
 				$service->check_user($bdd);
-				//return $response;
-				
-				if(isset($_SESSION['user_logged'])){	
-					return $this->container->get('view')->render($response,'main_page.html');
+				if(isset($_SESSION['user_logged'])){
+					
+					return $this->container->get('view')->render($response,'main_page.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
 				}
 				else
 				{
@@ -197,11 +200,12 @@ class HelloController
 		try
 		{
 			$bdd=[];
+		
 			$bdd['name']=$_SESSION['name'];
 			$service= $this->container->get('post_user_use_case');
 			$service->remove_user($bdd);
+			session_unset();
 			return $this->container->get('view')->render($response,'landing.html');
-
 		}catch(\Exception $e)
 		{
 			$response = $response->withStatus(500)->withHeader('Content-Type','text/html')->write($e->getMessage());
@@ -209,6 +213,71 @@ class HelloController
 		}
 	}
 	
+	public function download_file(Request $request,Response $response,array $arg)
+	{
+
+	if(isset($_SESSION['user_logged'])){
 	
+			$get="";
+			
+			if($data=$request->getParam('file'))
+			$get=$data;
+			if($get!=""){
+				$service= $this->container->get('post_user_use_case');
+				$service->download_file($get);	
+				return $this->container->get('view')->render($response,'main_page.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
+			}
+		}
+		else
+		{
+			return $this->container->get('view')->render($response,'landing.html');
+		}
+	}
+	
+	public function remove_file(Request $request,Response $response,array $arg)
+	{
+
+	if(isset($_SESSION['user_logged'])){
+	
+			$get="";
+			
+			if($data=$request->getParam('remove'))
+			$get=$data;
+			if($get!=""){
+				$service= $this->container->get('post_user_use_case');
+				$service->remove_file($get);
+				return $this->container->get('view')->render($response,'main_page.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
+			}
+		}
+		else
+		{
+			return $this->container->get('view')->render($response,'landing.html');
+		}
+	}
+	
+	public function rename_file(Request $request,Response $response,array $arg)
+	{
+
+	if(isset($_SESSION['user_logged'])){
+	
+			$data = $request->getParsedBody();
+			$bdd = [];
+
+			$bdd['path'] = filter_var($data['path'], FILTER_SANITIZE_STRING);
+			$bdd['o_name'] = filter_var($data['o_name'], FILTER_SANITIZE_STRING);	
+			$bdd['new_name'] = filter_var($data['new_name'], FILTER_SANITIZE_STRING);
+			
+			
+			if($data){
+				$service= $this->container->get('post_user_use_case');
+				$service->rename_file($bdd);
+				return $this->container->get('view')->render($response,'main_page.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
+			}
+		}
+		else
+		{
+			return $this->container->get('view')->render($response,'landing.html');
+		}
+	}
 }
 ?>

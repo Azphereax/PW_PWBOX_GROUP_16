@@ -9,6 +9,10 @@ interface UserRepository
 	public function check(User $user);
 	public function update(User $user);
 	public function remove(User $user);
+	public function DeleteDirectory($path);
+	public function download_file($path);
+	public function remove_file($path);
+	public function rename_file($data);
 }
 
 

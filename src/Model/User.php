@@ -9,6 +9,7 @@ private $password;
 private $birthdate;
 private	$description;
 
+
 public function __construct($id,$name,$email,$password,$birthdate,$description)
 {
 	$this->id= $id;
@@ -19,7 +20,7 @@ public function __construct($id,$name,$email,$password,$birthdate,$description)
 	else $this->password="";
 	$this->birthdate= $birthdate;
 	$this->description= $description;
-	
+
 }
 
 
