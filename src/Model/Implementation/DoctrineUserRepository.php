@@ -113,6 +113,22 @@ class DoctrineUserRepository implements UserRepository
 			printf("<script>alert('Failed update')</script>");
 			
 	}
+	
+	public function remove(User $user)
+	{
+		$name=$user->getName();
+		$sql = "Delete from users where name=:name";
+		
+		$stmt = $this->database->prepare($sql);
+		
+		$stmt->bindValue("name",$user->getName(),'string');
+		
+		
+		if(!$stmt->execute())
+			printf("<script>alert('Failed delete users')</script>");
+		else
+			printf("<script>alert('".$name." account deleted')</script>");
+	}
 }
 
 

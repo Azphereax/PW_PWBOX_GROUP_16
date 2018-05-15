@@ -30,7 +30,16 @@ class HelloController
 	
 	public function access_main_page(Request $request,Response $response,array $arg)
 	{
-		return $this->container->get('view')->render($response,'main_page.html');
+
+	if(isset($_SESSION['user_logged'])){
+			
+		
+			return $this->container->get('view')->render($response,'main_page.html');
+		}
+		else
+		{
+			return $this->container->get('view')->render($response,'landing.html');
+		}
 	}
 	
 	public function login(Request $request,Response $response,array $arg)
@@ -61,15 +70,7 @@ class HelloController
 			$pass_regex = '/^[A-Za-z0-9]*([A-Z][A-Za-z0-9]*\d|\d[A-Za-z0-9]*[A-Z])[A-Za-z0-9]*$/';
 			if(!((strlen($bdd['name'])<=20) && (strlen($bdd['password'])>=6) && (strlen($bdd['password'])<=12) && !strcmp($bdd['password'],$bdd['c_password']) && preg_match($date_regex, $bdd['birthdate']) && preg_match($pass_regex, $bdd['password'])  ))
 			$data=null;//Do not save , empty the data 
-			/*
-				echo $bdd['birthdate']."<br>";
-				echo "1:".(strlen($bdd['name'])<=20)."<br>";
-				echo "2:".(strlen($bdd['password'])>=6)."<br>";
-				echo "3:".(strlen($bdd['password'])<=12)."<br>";
-				echo "4:".!strcmp($bdd['password'],$bdd['c_password'])."<br>";
-				echo "5:".preg_match($date_regex, $bdd['birthdate'])."<br>";
-				echo "6:".preg_match($pass_regex, $bdd['password'])."<br>";
-			*/
+		
 			$service= $this->container->get('post_user_use_case');
 			if($data)
 			{
@@ -110,7 +111,19 @@ class HelloController
 			if($data)
 			{
 				$service->check_user($bdd);
-				return $response;
+				//return $response;
+				
+				if(isset($_SESSION['user_logged'])){	
+					return $this->container->get('view')->render($response,'main_page.html');
+				}
+				else
+				{
+					echo "<script>alert('Wrong email/password');</script>";
+					return $this->container->get('view')->render($response,'login.html');
+				}
+				
+				
+				
 			}else
 			{
 				
@@ -176,9 +189,26 @@ class HelloController
 			$response = $response->withStatus(500)->withHeader('Content-Type','text/html')->write($e->getMessage());
 			
 		}
-		
-		
 	}
+	
+	public function remove_account(Request $request,Response $response)
+	{
+		
+		try
+		{
+			$bdd=[];
+			$bdd['name']=$_SESSION['name'];
+			$service= $this->container->get('post_user_use_case');
+			$service->remove_user($bdd);
+			return $this->container->get('view')->render($response,'landing.html');
+
+		}catch(\Exception $e)
+		{
+			$response = $response->withStatus(500)->withHeader('Content-Type','text/html')->write($e->getMessage());
+			
+		}
+	}
+	
 	
 }
 ?>

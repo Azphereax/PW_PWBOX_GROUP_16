@@ -32,6 +32,14 @@ class PostUserUseCase
 		$this->repo->update($user);
 		
 	}
+	
+	public function remove_user(array $user_update)
+	{
+		$user=new User(null,$user_update['name'],null,null,null,null);
+		$this->repo->remove($user);
+		
+	}
+	
 }
 
 

@@ -3,9 +3,11 @@
 {% block content %}
 <ul>
 		<li><a class="active" href="#">Update Page</a></li>
-		<li><a href="{{ path_for('register') }}">Register</a></li>
 		<li><a href="{{ path_for('main') }}">Main page</a></li>
+		<li><a href="{{ path_for('register') }}">Register</a></li>
 		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
+		
 </ul>
 
  <form method="post" action="{{ path_for('modify_profile') }}">
