@@ -122,26 +122,29 @@ class DoctrineUserRepository implements UserRepository
 		foreach ($dfiles as $file) {
 			is_dir($file) ? $this->DeleteDirectory($file) : unlink($file);
 		}	
-		return rmdir($path_dir);
+		return @rmdir($path_dir);
 	}
 
 	public function remove(User $user)
 	{
 		$name=$user->getName();
-		$sql =  "Delete from users where name=:name";
-		$sql_2= "Delete from folders where owner=:name";
+		$sql =  "Delete from users where name=:name;";
+		$sql_2= "Delete from folders where owner=:name;";
 		
 		$stmt = $this->database->prepare($sql);
 		$stmt_2 = $this->database->prepare($sql_2);
 		
-		$stmt->bindValue("name",$user->getName(),'string');
-		$stmt_2->bindValue("name",$user->getName(),'string');
+		$stmt->bindValue("name",$_SESSION["name"],'string');
+		$stmt_2->bindValue("name",$_SESSION["name"],'string');
 		
 		$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]);
 		
 		
-		if(!$stmt->execute() && !$stmt_2->execute()  && !$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]))
+		if(!$stmt->execute())
 			printf("<script>alert('Failed properly delete users')</script>");
+		if(!$stmt_2->execute())printf("<script>alert('Failed properly delete share')</script>");
+		
+		if(!$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]))printf("<script>alert('Failed delete folder')</script>");
 		else
 		{
 			printf("<script>alert('".$name." account deleted')</script>");
@@ -242,6 +245,9 @@ class DoctrineUserRepository implements UserRepository
 		else {
 			echo "<script>alert('Failed uploaded.')</script>";
 		}
+		
+		$content=[];
+		$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
     }
 	
 	public function share($data)
@@ -287,6 +293,7 @@ class DoctrineUserRepository implements UserRepository
 		$content=[];
 		$content=$this->save_content($data['path'],$content);
 		$_SESSION['content']=$content;
+		$_SESSION['path']=$data['path'];
 	}
 	
 }
