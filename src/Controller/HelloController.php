@@ -370,7 +370,7 @@ class HelloController
 			$bdd['path'] = filter_var($data['path'], FILTER_SANITIZE_STRING);
 			$service= $this->container->get('post_user_use_case');
 			$service->shared_folder($bdd);
-			return $this->container->get('view')->render($response,'shared_folder.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
+			return $this->container->get('view')->render($response,'shared_folder.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name'],'path' => $_SESSION['path']));
 			
 		}
 		else

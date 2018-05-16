@@ -122,30 +122,27 @@ class DoctrineUserRepository implements UserRepository
 		foreach ($dfiles as $file) {
 			is_dir($file) ? $this->DeleteDirectory($file) : unlink($file);
 		}	
-		return rmdir($path_dir);
+		return @rmdir($path_dir);
 	}
 
 	public function remove(User $user)
 	{
-		$name=$user->getName();
-		$sql =  "Delete from users where name=:name";
-		$sql_2= "Delete from folders where owner=:name";
+		$sql =  "Delete from users where name=:name;";
+		$sql_2= "Delete from folders where owner=:owner;";
 		
 		$stmt = $this->database->prepare($sql);
 		$stmt_2 = $this->database->prepare($sql_2);
 		
-		$stmt->bindValue("name",$user->getName(),'string');
-		$stmt_2->bindValue("name",$user->getName(),'string');
+		$stmt->bindValue("name",$_SESSION["name"],'string');
+		$stmt_2->bindValue("owner",$_SESSION["name"],'string');
 		
 		$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]);
 		
+		$stmt->execute();
+		$stmt_2->execute();
+		$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]);
+		printf("<script>alert('".$_SESSION["name"]." account deleted')</script>");
 		
-		if(!$stmt->execute() && !$stmt_2->execute()  && !$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]))
-			printf("<script>alert('Failed properly delete users')</script>");
-		else
-		{
-			printf("<script>alert('".$name." account deleted')</script>");
-		}
 		
 	}
 	
@@ -176,8 +173,7 @@ class DoctrineUserRepository implements UserRepository
 	}
 	
 	public function rename_file($data){
-
-	if(file_exists($data['path']."/".$data['o_name'])) {
+	if(file_exists($data['path']."/".$data['o_name']) && strlen($data['new_name'])>0 && $data['new_name']!='null') {
 					if(!rename($data['path']."/".$data['o_name'],$data['path']."/".$data['new_name']))echo "<script>alert('Failed rename .');</script>";
 					else echo "<script>alert('Sucessfully rename');</script>";
 			}else echo "<script>alert('Failed rename .');</script>";
@@ -188,7 +184,7 @@ class DoctrineUserRepository implements UserRepository
 	
 	public function download_file($path_access){
 			
-			echo $path_access;
+			
 			if(file_exists($path_access)) {
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/octet-stream');
@@ -227,21 +223,38 @@ class DoctrineUserRepository implements UserRepository
 			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
     }
 	
+	public function DirectorySize ($dir_path)
+	{
+		$size_dir = 0;
+		foreach (glob(rtrim($dir_path, '/').'/*', GLOB_NOSORT) as $instance) {
+			$size_dir += is_file($instance) ? filesize($instance) : $this->DirectorySize($instance);
+		}
+		return $size_dir;
+	}
+
 	public function upload_file($data){
-		$path_file=$data['path']."/".$_FILES['upload_file']['name'];
-		$ext=strtolower(pathinfo($path_file,PATHINFO_EXTENSION));
-		if($ext!="pdf" && $ext!="jpg" && $ext!="png" && $ext!="gif" && $ext!="md" && $ext!="txt")
-			echo "<script>alert('bad file extension.')</script>";
-		else if (file_exists($path_file)){
-			echo "<script>alert('file already exists.')</script>";
-		}else if ($_FILES["upload_file"]["size"] > 2000000) {
-			echo "<script>alert('file too large.')</script>";
-		}else if (move_uploaded_file($_FILES["upload_file"]["tmp_name"], $path_file)) {
-			echo "<script>alert('Successful uploaded.')</script>";
-		}
-		else {
-			echo "<script>alert('Failed uploaded.')</script>";
-		}
+		
+		$dir_size=$this->DirectorySize("../Cloud_user/".$_SESSION['name']."/");
+		$file_size=$_FILES["upload_file"]["size"];
+		if(($dir_size+$file_size)<1000000000)
+		{
+			$path_file=$data['path']."/".$_FILES['upload_file']['name'];
+			$ext=strtolower(pathinfo($path_file,PATHINFO_EXTENSION));
+			if($ext!="pdf" && $ext!="jpg" && $ext!="png" && $ext!="gif" && $ext!="md" && $ext!="txt")
+				echo "<script>alert('bad file extension.')</script>";
+			else if (file_exists($path_file)){
+				echo "<script>alert('file already exists.')</script>";
+			}else if ($file_size > 2000000) {
+				echo "<script>alert('file too large.')</script>";
+			}else if (move_uploaded_file($_FILES["upload_file"]["tmp_name"], $path_file)) {
+				echo "<script>alert('Successful uploaded. Left Cloud place = ".((1000000000-($dir_size+$file_size))/1000000)." Mo.')</script>";
+			}
+			else {
+				echo "<script>alert('Failed uploaded.')</script>";
+			}
+			$content=[];
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
+		}else echo "<script>alert('Size limit reached ,only ".(1000000000-($dir_size+$file_size))."available')</script>";
     }
 	
 	public function share($data)
@@ -287,6 +300,7 @@ class DoctrineUserRepository implements UserRepository
 		$content=[];
 		$content=$this->save_content($data['path'],$content);
 		$_SESSION['content']=$content;
+		$_SESSION['path']=$data['path'];
 	}
 	
 }
