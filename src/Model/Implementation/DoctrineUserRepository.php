@@ -229,6 +229,7 @@ class DoctrineUserRepository implements UserRepository
 		foreach (glob(rtrim($dir_path, '/').'/*', GLOB_NOSORT) as $instance) {
 			$size_dir += is_file($instance) ? filesize($instance) : $this->DirectorySize($instance);
 		}
+<<<<<<< HEAD
 		return $size_dir;
 	}
 
@@ -255,6 +256,11 @@ class DoctrineUserRepository implements UserRepository
 			$content=[];
 			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
 		}else echo "<script>alert('Size limit reached ,only ".(1000000000-($dir_size+$file_size))."available')</script>";
+=======
+		
+		$content=[];
+		$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
+>>>>>>> afb5cdb7c83ba6363bd659b664b2f8ff4dd8c941
     }
 	
 	public function share($data)
