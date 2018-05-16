@@ -250,9 +250,46 @@ class DoctrineUserRepository implements UserRepository
 			echo "<script>alert('Failed uploaded.')</script>";
 		}
 			
-			$this->main_access(".");
-		
+			$this->main_access(".");	
     }
+	
+	public function share($data)
+	{
+		$sql="SELECT COUNT(*) AS found_user from users where email=:email and name!=:name";
+		$sql_2 = "INSERT INTO folders(Folders,owner,user_share,role) VALUES(:folders,:owner,:user_share,:role)";
+		
+		$stmt = $this->database->prepare($sql);
+		$stmt_2 = $this->database->prepare($sql_2);
+		
+		$stmt->bindValue("email",$data['email'],'string');
+		$stmt->bindValue("name",$_SESSION['name'],'string');
+		
+		$stmt_2->bindValue("folders",$data['path'],'string');
+		$stmt_2->bindValue("owner",$_SESSION['name'],'string');
+		$stmt_2->bindValue("user_share",$data['email'],'string');
+		$stmt_2->bindValue("role","reader",'string');		
+		
+		$stmt->execute();
+		$result=$stmt->fetch();
+		
+		if($result['found_user']==1){
+			
+		if($stmt_2->execute())echo "<script>alert('Sucessfully share user.')</script>";
+		else echo "<script>alert('Failed share user.')</script>";
+			
+		}else echo "<script>alert('Users already share/owner or not found.')</script>";
+	}
+	
+	public function shared()
+	{
+		$sql="SELECT * from folders where user_share=:email";
+		$stmt = $this->database->prepare($sql);
+		$stmt->bindValue("email",$_SESSION['email'],'string');
+		$stmt->execute();
+		$content=[];
+		while($result=$stmt->fetch())array_push($content,array($result['Folders'],$result['owner'],$result['user_share'],$result['role']));
+		$_SESSION['content']=$content;
+	}
 	
 }
 

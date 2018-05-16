@@ -69,6 +69,17 @@ class PostUserUseCase
 		$this->repo->upload_file($data);
 	}
 	
+		public function share($data)
+	{
+		$this->repo->share($data);
+	}
+	
+		public function shared()
+	{
+		$this->repo->shared();
+	}
+	
+	
 }
 
 

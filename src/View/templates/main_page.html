@@ -4,6 +4,7 @@
 <ul>
 		<li><a class="active" href="{{ path_for('main') }}">Main</a></li>
 		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
+		<li><a href="{{ path_for('shared') }}">Shared</a></li>
 		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
 		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
 	</ul>
@@ -14,9 +15,9 @@
 		var new_name =prompt("New name : ");
 		if(new_name!=""){
 		
-			alert(path+"#"+o_name+" ==> "+new_name);
-			document.write('<form name="ff" action="{{ path_for("rename_file") }}" method="post"><input name="path" value='+path+' type="text"><input name="o_name" value='+o_name+' type="text">	<input name="new_name" value='+new_name+' type="text"></form>');
-			ff.submit();
+		
+			document.write('<form name="f1" action="{{ path_for("rename_file") }}" method="post"><input name="path" value='+path+' type="text"><input name="o_name" value='+o_name+' type="text">	<input name="new_name" value='+new_name+' type="text"></form>');
+			f1.submit();
 		}
 		else
 			alert("Invalid new name");
@@ -25,9 +26,9 @@
 	function create(path){
 		var name =prompt("Name : ");
 		if(name!=""){
-			alert('path='+path+'   name='+name);
-			document.write('<form name="fx" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="name" value='+name+' type="text"></form>');
-			fx.submit();
+
+			document.write('<form name="f2" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="name" value='+name+' type="text"></form>');
+			f2.submit();
 		}
 		else
 			alert("Invalid new name");
@@ -35,15 +36,14 @@
 	}
 	
 	function upload_file(path){
-		document.write('<form name="f" action="{{ path_for("upload_file") }}" method="post" enctype="multipart/form-data"> <input type="file" name="upload_file" id="upload_file"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
+		document.write('<form name="f3" action="{{ path_for("upload_file") }}" method="post" enctype="multipart/form-data"> <input type="file" name="upload_file" id="upload_file"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
 	}
 	
 	function share(path){
-		var name =prompt("Name : ");
-		if(name!=""){
-			alert('path='+path+'   name='+name);
-			document.write('<form name="fx" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="name" value='+name+' type="text"></form>');
-			fx.submit();
+		var email =prompt("User Email : ");
+		if(email!=""){
+			document.write('<form name="f4" action="{{ path_for("share") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="email" value='+email+' type="text"></form>');
+			f4.submit();
 		}
 		else
 			alert("Invalid new name");
@@ -92,7 +92,7 @@
 				<td colspan="5"><a href="javascript:create('{{i[2]}}');">Create new folder</a></td>
 			</tr>
 			<tr>
-				<td colspan="5"><a href="javascript:share_folder('{{i[2]}}');">Share folder</a> </td>
+				<td colspan="5"><a href="javascript:share('{{i[2]}}');">Share</a> </td>
 			</tr>
 		{% endif %}
 	{% endfor %}

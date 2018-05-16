@@ -15,7 +15,8 @@ interface UserRepository
 	public function rename_file($data);
 	public function create_folder($data);
 	public function upload_file($data);	
-	
+	public function share($data);
+	public function shared();	
 }
 
 

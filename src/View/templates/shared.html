@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}	SHARED PAGE{% endblock %}
+{% block content %}
+<ul>
+		<li><a href="{{ path_for('main') }}">Main</a></li>
+		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
+		<li><a class="active" href="{{ path_for('shared') }}">Shared</a></li>
+		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
+	</ul>
+	<br><br><br>
+	<table>
+   <caption>User : {{ name }} </caption>
+
+   <thead>
+       <tr>
+           <th>Owner </th>
+		   <th>Path</th>
+		   <th>email_user</th>
+		   <th>Role</th>
+       </tr>
+   </thead>
+   <tbody> 
+       
+	{% for i in content %}
+		
+			<tr>
+				<td>{{i[0]}} </td>
+				<td>{{i[1]}} </td>
+				<td>{{i[2]}} </td>
+				<td>{{i[3]}} </td>
+			</tr>
+	{% endfor %}
+	
+   </tbody>
+	
+</table>
+
+
+{% endblock %}
