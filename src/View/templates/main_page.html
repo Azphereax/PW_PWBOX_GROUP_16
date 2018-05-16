@@ -5,6 +5,7 @@
 		<li><a class="active" href="{{ path_for('main') }}">Main</a></li>
 		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
 		<li><a href="{{ path_for('shared') }}">Shared</a></li>
+		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
 		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
 		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
 	</ul>
@@ -56,8 +57,6 @@
 	
 
 	<table>
-   <caption>User : {{ name }} </caption>
-
    <thead>
        <tr>
            <th>Content </th>
@@ -79,9 +78,9 @@
 				<td><a href="{{ path_for('main') }}?folder={{i[0]}}">Enter</a> </td>
 			{% endif %}
 			{% if i[1] == "File" %}
-				<td><a href="{{ path_for('download_file') }}?file={{i[2]}}{{i[0]}}">Download</a> </td>
+				<td><a href="{{ path_for('download_file') }}?file={{i[2]}}/{{i[0]}}">Download</a> </td>
 			{% endif %}
-			<td><a href="{{ path_for('remove_file') }}?remove={{i[2]}}{{i[0]}}">{{i[0]}}</a>  </td>
+			<td><a href="{{ path_for('remove_file') }}?remove={{i[2]}}/{{i[0]}}">{{i[0]}}</a>  </td>
 			<td><a href="javascript:rename('{{i[2]}}','{{i[0]}}');">{{i[0]}}</a>  </td>
 			</tr>
 		{% elseif  i[0] != "." %}

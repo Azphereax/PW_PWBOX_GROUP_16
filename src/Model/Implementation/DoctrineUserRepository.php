@@ -83,6 +83,7 @@ class DoctrineUserRepository implements UserRepository
 			$_SESSION['birthdate']=$result_2['birthdate'];
 			$_SESSION['description']=$result_2['description'];
 			$_SESSION['password']=$result_2['password'];
+			$_SESSION['path']="../Cloud_user/".$_SESSION['name'];
 			$this->main_access(".");
 			
 		}
@@ -157,6 +158,7 @@ class DoctrineUserRepository implements UserRepository
 			else array_push($content,array($file,(is_dir($path."/".$file))?"Folder":"File",getcwd()."/".rtrim($path,'.')));
 			}
 			$d->close(); 
+
 		}
 		else
 			echo "<script>alert('Failed open folder".$path."')</script>";
@@ -166,31 +168,27 @@ class DoctrineUserRepository implements UserRepository
 	
 	public function main_access($path_access){
 		
-		$sql="SELECT * from folders where user_share=:name";
-		
-		$stmt = $this->database->prepare($sql);
-		$stmt->bindValue("name",$_SESSION['name'],'string');
-		
-		
-		if($stmt->execute()){
-			
-			$result=$stmt->fetch();
 			$content=[];
-			
-			$path="../Cloud_user/".$_SESSION['name']."/".$path_access;
-			
-			$content=$this->save_content($path,$content);
+			if($path_access==".")$_SESSION['path']="../Cloud_user/".$_SESSION['name'];
+			$_SESSION['path'].="/".$path_access;
+			$content=$this->save_content($_SESSION['path'],$content);
 			$_SESSION['content']=$content;
-		}
-		else
-				echo "<script>alert('Failed open folder')</script>";
-		
 	}
+	
+	public function rename_file($data){
+
+	if(file_exists($data['path']."/".$data['o_name'])) {
+					if(!rename($data['path']."/".$data['o_name'],$data['path']."/".$data['new_name']))echo "<script>alert('Failed rename .');</script>";
+					else echo "<script>alert('Sucessfully rename');</script>";
+			}else echo "<script>alert('Failed rename .');</script>";
+			
+			$content=[];
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
+    }
 	
 	public function download_file($path_access){
 			
-			
-			$this->main_access(".");
+			echo $path_access;
 			if(file_exists($path_access)) {
 				header('Content-Description: File Transfer');
 				header('Content-Type: application/octet-stream');
@@ -215,42 +213,35 @@ class DoctrineUserRepository implements UserRepository
 					if(!unlink($path_access))echo "<script>alert('Failed delete .');</script>";
 					else echo "<script>alert('Sucessfully deleted');</script>";
 			}
-			$this->main_access(".");
-    }
-	
-	public function rename_file($data){
 			
-	if(file_exists($data['path'].$data['o_name'])) {
-					if(!rename($data['path'].$data['o_name'],$data['path'].$data['new_name']))echo "<script>alert('Failed rename .');</script>";
-					else echo "<script>alert('Sucessfully rename');</script>";
-			}else echo "<script>alert('Failed rename .');</script>";
-			$this->main_access(".");
+			$content=[];
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
     }
-	
+		
 	public function create_folder($data){
-			if(@	mkdir($data['path'].$data['name']))
+			if(@	mkdir($data['path']."/".$data['name']))
 				echo "<script>alert('Successful created folder');</script>";
 			else
 				echo "<script>alert('Failed created folder (no right or already exists)');</script>";		
-		$this->main_access(".");
+			$content=[];
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
     }
 	
 	public function upload_file($data){
-		$ext=strtolower(pathinfo($data['path'].$_FILES['upload_file']['name'],PATHINFO_EXTENSION));
+		$path_file=$data['path']."/".$_FILES['upload_file']['name'];
+		$ext=strtolower(pathinfo($path_file,PATHINFO_EXTENSION));
 		if($ext!="pdf" && $ext!="jpg" && $ext!="png" && $ext!="gif" && $ext!="md" && $ext!="txt")
 			echo "<script>alert('bad file extension.')</script>";
-		else if (file_exists($data['path'].$_FILES['upload_file']['name'])){
+		else if (file_exists($path_file)){
 			echo "<script>alert('file already exists.')</script>";
 		}else if ($_FILES["upload_file"]["size"] > 2000000) {
 			echo "<script>alert('file too large.')</script>";
-		}else if (move_uploaded_file($_FILES["upload_file"]["tmp_name"], $data['path'].$_FILES['upload_file']['name'])) {
+		}else if (move_uploaded_file($_FILES["upload_file"]["tmp_name"], $path_file)) {
 			echo "<script>alert('Successful uploaded.')</script>";
 		}
 		else {
 			echo "<script>alert('Failed uploaded.')</script>";
 		}
-			
-			$this->main_access(".");	
     }
 	
 	public function share($data)
@@ -288,6 +279,13 @@ class DoctrineUserRepository implements UserRepository
 		$stmt->execute();
 		$content=[];
 		while($result=$stmt->fetch())array_push($content,array($result['Folders'],$result['owner'],$result['user_share'],$result['role']));
+		$_SESSION['content']=$content;
+	}
+	
+	public function shared_folder($data)
+	{
+		$content=[];
+		$content=$this->save_content($data['path'],$content);
 		$_SESSION['content']=$content;
 	}
 	

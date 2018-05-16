@@ -79,6 +79,11 @@ class PostUserUseCase
 		$this->repo->shared();
 	}
 	
+	public function shared_folder($data)
+	{
+		$this->repo->shared_folder($data);
+	}
+	
 	
 }
 

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}	SHARED PAGE{% endblock %}
+{% block title %}	SHARED FOLDER PAGE{%endblock %}
 {% block content %}
 <ul>
 		<li><a href="{{ path_for('main') }}">Main</a></li>
@@ -10,34 +10,28 @@
 		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
 	</ul>
 	<br><br><br>
-	
-	<script>
-	function shared_folder(path){
-			document.write('<form name="f1" action="{{ path_for("shared_folder") }}" method="post"><input name="path" value='+path+' type="text"></form>');
-			f1.submit();
-	}
-	</script>
+
 	<table>
    <thead>
        <tr>
-           <th>Path</th>
-		   <th>Owner</th>
-		   <th>email_user</th>
-		   <th>Role</th>
-		   <th>Access</th>
+           <th>Content </th>
+		   <th>Type </th>
+		   <th>Action </th>
        </tr>
    </thead>
    <tbody> 
        
-	{% for i in content %}
+	{% for i in content|reverse %}
 		
+		{% if i[1] != "s" %}
 			<tr>
-				<td>{{i[0]}} </td>
-				<td>{{i[1]}} </td>
-				<td>{{i[2]}} </td>
-				<td>{{i[3]}} </td>
-				<td><a href="javascript:shared_folder('{{i[0]}}');">directory</a> </td>
+			<td>{{i[0]}} </td>
+			<td>{{i[1]}} </td>
+			{% if i[1] == "File" %}
+				<td><a href="{{ path_for('download_file') }}?file={{i[2]}}/{{i[0]}}">Download</a> </td>
+			{% endif %}
 			</tr>
+		{% endif %}
 	{% endfor %}
 	
    </tbody>

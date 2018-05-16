@@ -359,5 +359,24 @@ class HelloController
 			return $this->container->get('view')->render($response,'landing.html');
 		}
 	}
+	
+	public function shared_folder(Request $request,Response $response,array $arg)
+	{
+
+	if(isset($_SESSION['user_logged'])){
+	
+			$data = $request->getParsedBody();
+			$bdd=[];
+			$bdd['path'] = filter_var($data['path'], FILTER_SANITIZE_STRING);
+			$service= $this->container->get('post_user_use_case');
+			$service->shared_folder($bdd);
+			return $this->container->get('view')->render($response,'shared_folder.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
+			
+		}
+		else
+		{
+			return $this->container->get('view')->render($response,'landing.html');
+		}
+	}
 }
 ?>

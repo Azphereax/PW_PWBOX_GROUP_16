@@ -17,6 +17,7 @@ interface UserRepository
 	public function upload_file($data);	
 	public function share($data);
 	public function shared();	
+	public function shared_folder($data);	
 }
 
 
