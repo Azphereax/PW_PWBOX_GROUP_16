@@ -127,28 +127,22 @@ class DoctrineUserRepository implements UserRepository
 
 	public function remove(User $user)
 	{
-		$name=$user->getName();
 		$sql =  "Delete from users where name=:name;";
-		$sql_2= "Delete from folders where owner=:name;";
+		$sql_2= "Delete from folders where owner=:owner;";
 		
 		$stmt = $this->database->prepare($sql);
 		$stmt_2 = $this->database->prepare($sql_2);
 		
 		$stmt->bindValue("name",$_SESSION["name"],'string');
-		$stmt_2->bindValue("name",$_SESSION["name"],'string');
+		$stmt_2->bindValue("owner",$_SESSION["name"],'string');
 		
 		$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]);
 		
+		$stmt->execute();
+		$stmt_2->execute();
+		$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]);
+		printf("<script>alert('".$_SESSION["name"]." account deleted')</script>");
 		
-		if(!$stmt->execute())
-			printf("<script>alert('Failed properly delete users')</script>");
-		if(!$stmt_2->execute())printf("<script>alert('Failed properly delete share')</script>");
-		
-		if(!$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]))printf("<script>alert('Failed delete folder')</script>");
-		else
-		{
-			printf("<script>alert('".$name." account deleted')</script>");
-		}
 		
 	}
 	
