@@ -1,36 +1,35 @@
 {% extends "base.html" %}
-{% block title %}	MAIN PAGE{% endblock %}
+{% block title %}	Main{% endblock %}
 {% block content %}
+
+<div id='cssmenu'>
 <ul>
 
-		<li><a class="active" href="{{ path_for('main') }}">Main</a></li>
+		<li><a href="{{ path_for('main') }}">Main</a></li>
 		
-		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
+		<li><a href="{{ path_for('update') }}">Update</a></li>
 		
-		<li><a href="{{ path_for('shared') }}">Shared</a></li>
+		<li><a href="{{ path_for('sharing') }}">Shared</a></li>
 		
 		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
 		
-		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		<li style="float:right"><a href="{{ path_for('logout') }}">logout</a></li>
 		
-		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
+		<li style="float:right"><a class="danger" href="{{ path_for('remove') }}">Remove account</a></li>
 	
 </ul>
-
-	<br>
-	<br>
-	<br>
+</div>
 	
 	<script>
-	function upload_file(path){
-		document.write('<form action="{{ path_for("upload_file") }}" method="post" enctype="multipart/form-data"> <input type="file" name="upload_file" id="upload_file"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
+	function file_up(path){
+		document.write('<form action="{{ path_for("file_up") }}" method="post" enctype="multipart/form-data"> <input type="file" name="file_up" id="file_up"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
 	}
 	
 	function create(path){
 		var name =prompt("Name : ");
 		if(name!=""){
 
-			document.write('<form name="fcreate" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="name" value='+name+' type="hidden"></form>');
+			document.write('<form name="fcreate" action="{{ path_for("folder_new") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="name" value='+name+' type="hidden"></form>');
 			fcreate.submit();
 		}
 		else
@@ -52,7 +51,7 @@
 	function rename(path,o_name){
 		var new_name =prompt("New name : ");
 		if(new_name!=""){
-			document.write('<form name="frename" action="{{ path_for("rename_file") }}" method="post"><input name="path" value='+path+' type="hidden"><input name="o_name" value='+o_name+' type="hidden">	<input name="new_name" value='+new_name+' type="hidden"></form>');
+			document.write('<form name="frename" action="{{ path_for("rename") }}" method="post"><input name="path" value='+path+' type="hidden"><input name="o_name" value='+o_name+' type="hidden">	<input name="new_name" value='+new_name+' type="hidden"></form>');
 			frename.submit();
 		}
 		else
@@ -61,15 +60,19 @@
 	}
 	</script>
 	
-	<table>
-   <thead>
+	<div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100">
+					<table>
+						 <thead>
    
-       <tr>
-		   <th>Type </th>
-           <th>Name </th>
-		   <th>Enter or DL</th>
-		   <th>Remove</th>
-		   <th>Rename</th>
+       <tr class="table100-head">
+		   <th class="column1" align="center">Type </th>
+           <th class="column1" align="center">Name </th>
+		   <th class="column1" align="center">Enter/DL</th>
+		   <th class="column1" align="center">Remove</th>
+		   <th class="column1" align="center">Rename</th>
        </tr>
 	   
    </thead>
@@ -80,25 +83,25 @@
 		{% if list_data[1] != "dot" %}
 			<tr>
 			
-			<td>{{list_data[1]}} </td>
-			<td>{{list_data[0]}} </td>
+			<td class="column1">{{list_data[1]}} </td>
+			<td class="column1">{{list_data[0]}} </td>
 			
 			
 			{% if list_data[1] == "Folder" %}
-				<td><a href="{{ path_for('main') }}?folder={{list_data[0]}}">Enter</a> </td>
+				<td class="column1"><a href="{{ path_for('main') }}?folder={{list_data[0]}}">Enter</a> </td>
 			{% endif %}
 			
 			{% if list_data[1] == "File" %}
-				<td><a href="{{ path_for('download_file') }}?file={{list_data[2]}}/{{list_data[0]}}">Download</a> </td>
+				<td class="column1"><a href="{{ path_for('dl') }}?file={{list_data[2]}}/{{list_data[0]}}">Download</a> </td>
 			{% endif %}
 			
-			<td><a href="{{ path_for('remove_file') }}?remove={{list_data[2]}}/{{list_data[0]}}">{{list_data[0]}}</a>  </td>
-			<td><a href="javascript:rename('{{list_data[2]}}','{{list_data[0]}}');">{{list_data[0]}}</a>  </td>
+			<td class="column1"><a href="{{ path_for('file_r') }}?remove={{list_data[2]}}/{{list_data[0]}}">{{list_data[0]}}</a>  </td>
+			<td class="column1"><a href="javascript:rename('{{list_data[2]}}','{{list_data[0]}}');">{{list_data[0]}}</a>  </td>
 			
 			</tr>
 			
 		{% elseif  list_data[0] != "." %}
-			<tr><td colspan="5"><a href="javascript:upload_file('{{list_data[2]}}');">Upload new file</a> </td></tr>
+			<tr><td colspan="5"><a href="javascript:file_up('{{list_data[2]}}');">Upload new file</a> </td></tr>
 			<tr><td colspan="5"><a href="javascript:create('{{list_data[2]}}');">Create new folder</a></td></tr>
 			<tr><td colspan="5"><a href="javascript:share('{{list_data[2]}}');">Share</a> </td></tr>
 		{% endif %}
@@ -106,8 +109,12 @@
 	{% endfor %}
 	
    </tbody>
-	
-</table>
+						
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 {% endblock %}

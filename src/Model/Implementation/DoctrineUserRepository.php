@@ -277,18 +277,18 @@ class DoctrineUserRepository implements UserRepository
 	
 	public function upload_file($value){
 		
-		$size_of_the_file=$_FILES["upload_file"]["size"];
+		$size_of_the_file=$_FILES["file_up"]["size"];
 		
 		$size_of_the_directory=$this->DirectorySize("../Cloud_user/".$_SESSION['name']."/");
 		
 		if(($size_of_the_directory+$size_of_the_file)<pow(10,9))
 		{
-			$path_file=$value['path']."/".$_FILES['upload_file']['name'];
+			$path_file=$value['path']."/".$_FILES['file_up']['name'];
 			$ext=strtolower(pathinfo($path_file,PATHINFO_EXTENSION));
 			if($ext!="pdf" && $ext!="jpg" && $ext!="png" && $ext!="gif" && $ext!="md" && $ext!="txt")echo "<script>alert('bad file extension.')</script>";
 			else if (file_exists($path_file))echo "<script>alert('file already exists.')</script>";
 			else if ($size_of_the_file > 2*pow(10,6))echo "<script>alert('file too large.')</script>";
-			else if (move_uploaded_file($_FILES["upload_file"]["tmp_name"], $path_file))echo "<script>alert('Successful uploaded. Left Cloud place = ".((pow(10,9)-($size_of_the_directory+$size_of_the_file))/pow(10,6))." Mo.')</script>";
+			else if (move_uploaded_file($_FILES["file_up"]["tmp_name"], $path_file))echo "<script>alert('Successful uploaded. Left Cloud place = ".((pow(10,9)-($size_of_the_directory+$size_of_the_file))/pow(10,6))." Mo.')</script>";
 			else echo "<script>alert('Failed uploaded.')</script>";
 			$content=[];
 			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);

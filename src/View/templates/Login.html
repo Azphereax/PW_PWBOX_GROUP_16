@@ -1,20 +1,22 @@
 {% extends "base.html" %}
-{% block title %}	LOGIN PAGE{% endblock %}
+{% block title %}	Login{% endblock %}
 {% block content %}
-
+<div id='cssmenu'>
 <ul>
-	<li><a class="active" href="{{ path_for('login') }}">Login</a></li>
+	<li><a class="active" href="{{ path_for('log') }}">Login</a></li>
 	
-	<li><a href="{{ path_for('register') }}">Register</a></li>
+	<li><a href="{{ path_for('reg') }}">Register</a></li>
 </ul>
-
+</div>
 <form method="post" action="{{ path_for('connexion') }}">
 
-   <br/>
-   <br/>
+      <div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100">
+					<div class="div_form">
    
    <fieldset>
-       <legend>Login Form</legend> 
 	   
        <label for="email">Email</label>
 	   
@@ -33,7 +35,11 @@
 	   <input type="submit"value="Login"/>
 	   
    </fieldset>
-   
+     </div>
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
 
 {% endblock %}

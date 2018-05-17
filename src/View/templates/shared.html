@@ -1,56 +1,65 @@
 {% extends "base.html" %}
-{% block title %}	SHARED PAGE{% endblock %}
+{% block title %}	Share{% endblock %}
 {% block content %}
-
+<div id='cssmenu'>
 <ul>
 		<li><a href="{{ path_for('main') }}">Main</a></li>
 		
-		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
+		<li><a href="{{ path_for('update') }}">Update</a></li>
 		
-		<li><a class="active" href="{{ path_for('shared') }}">Shared</a></li>
+		<li><a class="active" href="{{ path_for('sharing') }}">Shared</a></li>
 		
 		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
 		
-		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		<li style="float:right"><a href="{{ path_for('logout') }}">logout</a></li>
 		
-		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
+		<li style="float:right"><a class="danger" href="{{ path_for('remove') }}">Remove account</a></li>
 		
 	</ul>
-	<br><br><br>
-
-	<table>
-   <thead>
-       <tr>
-		   <th>The Owner</th>
-		   <th>share for Role</th>
-		   <th>share for email</th>
-		   <th>Paht file shared</th>
-		   <th>Open</th>
+	</div>
+	<div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100">
+					<table>
+						 <thead>
+   
+       <tr class="table100-head">
+		   <th class="column1" align="center">The Owner </th>
+           <th class="column1" align="center">share for Role</th>
+		   <th class="column1" align="center">share for email</th>
+		   <th class="column1" align="center">Path file sharing</th>
+		   <th class="column1" align="center">Open</th>
        </tr>
+	   
    </thead>
-   <tbody> 
+   
+   <tbody>
        
 	{% for list_data in content %}
 			<tr>
-				<td>{{list_data[1]}} </td>
-				<td>{{list_data[3]}} </td>
-				<td>{{list_data[2]}} </td>
-				<td>{{list_data[0]}} </td>
-				
-				<td><a href="javascript:shared_folder('{{list_data[0]}}');">Link</a> </td>
+				<td class="column1" align="center">{{list_data[1]}} </td>
+				<td class="column1" align="center">{{list_data[3]}} </td>
+				<td class="column1" align="center">{{list_data[2]}} </td>
+				<td class="column1" align="center">{{list_data[0]}} </td>
+				<td class="column1" align="center"><a href="javascript:share_f('{{list_data[0]}}');">Link</a> </td>
 			</tr>
 	{% endfor %}
 	
    </tbody>
-	
-</table>
+						
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <script>
 
-	function shared_folder(chemin)
+	function share_f(chemin)
 	{
-			document.write('<form name="fshared_folder" action="{{ path_for("shared_folder") }}" method="post"><input name="path" value='+chemin+' type="hidden"></form>');
-			fshared_folder.submit();
+			document.write('<form name="fshare_f" action="{{ path_for("share_f") }}" method="post"><input name="path" value='+chemin+' type="hidden"></form>');
+			fshare_f.submit();
 	}
 </script>
 {% endblock %}

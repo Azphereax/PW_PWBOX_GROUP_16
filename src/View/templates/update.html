@@ -1,47 +1,62 @@
 {% extends "base.html" %}
-{% block title %}	UPDATE PAGE{% endblock %}
+{% block title %}	Update{% endblock %}
 {% block content %}
+
+<div id='cssmenu'>
 <ul>
 		<li><a href="{{ path_for('main') }}">Main</a></li>
 		
-		<li><a class="active" href="{{ path_for('update_profile') }}">Update</a></li>
+		<li><a class="active" href="{{ path_for('update') }}">Update</a></li>
 		
 		
-		<li><a href="{{ path_for('shared') }}">Shared</a></li>
+		<li><a href="{{ path_for('sharing') }}">Shared</a></li>
 		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
-		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		<li style="float:right"><a href="{{ path_for('logout') }}">logout</a></li>
 		
-		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
+		<li style="float:right"><a class="danger" href="{{ path_for('remove') }}">Remove account</a></li>
 		
 </ul>
+</div>
+ <form method="post" action="{{ path_for('mod') }}">
 
- <form method="post" action="{{ path_for('modify_profile') }}">
-   <br/><br/>
+   <div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100">
+					<div class="div_form">
+					<fieldset>
+
+					   <label for="email">Email</label>
+					   <input type="email" name="email" id="email" value="{{ email }}"/>
+					   <br/><br/>
+					   
+					   
+					   <label for="password">password </label>
+					   <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}"/>
+					   <br/>
+					   <br/>
+					   
+					   <label for="birthday">birthday </label>
+					   <input type="text" name="birthdate" id="birthdate" value="{{ birthdate }}" disabled/>
+					   <br/>
+					   <br/>
+					   
+					   <p>Description</p>
+					   <textarea name="description" id="description" cols="40" rows="5" disabled >{{ description }}</textarea>
+
+					   <br/>
+					   <br/>
+					   <input type="submit"value="Update"/>
+						<br/>
+					   <br/>
+					</fieldset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
    
-   <fieldset>
-       <legend>Update Form</legend> 
-
-       <label for="email">Email</label>
-       <input type="email" name="email" id="email" value="{{ email }}"/>
-	   <br/><br/>
-	   
-	   
-	   <label for="password">password </label>
-       <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}"/>
-	   <br/>
-	   <br/>
-	   
-	   <label for="birthday">birthday </label>
-	   <input type="text" name="birthdate" id="birthdate" value="{{ birthdate }}" disabled/>
-	   <br/>
-	   <br/>
-	   
-	   <p>Description</p>
-	   <textarea name="description" id="description" cols="40" rows="5" disabled >{{ description }}</textarea>
-
-	   <br/>
-	   <br/>
-	   <input type="submit"value="Update"/>
-   </fieldset>
 </form>
 {% endblock %}
