@@ -3,6 +3,7 @@
 {% block content %}
 <ul>
 		<li><a href="{{ path_for('login') }}">Login</a></li>
+		
 		<li><a class="active" href="{{ path_for('register') }}">Register</a></li>
 
 </ul>
@@ -11,26 +12,51 @@
 <form method="post" action="{{ path_for('save_db') }}">
    
    <fieldset>
+   
        <legend>Register Form</legend> 
 
        <label for="name">Name </label>
+	   
        <input type="text" name="name" id="name" maxlength="20" required/>
-	   <br/><br/>
-	   <label for="password">password </label>
-       <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
-	   <br/><br/>	
-	   <label for="c_password">Confirm password </label>
-       <input type="password" name="c_password" id="c_password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
-	   <br/><br/>
+	   
+	   <br/>
+	   <br/>
+	   
 	   <label for="email">Email</label>
+	   
        <input type="email" name="email" id="email" required />
-	   <br/><br/>
+	   
+	   <br/>
+	   <br/>
+	   
+	   <label for="password">password </label>
+	   
+       <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
+	   
+	   <br/>
+	   <br/>	
+	   
+	   <label for="c_password">Confirm password </label>
+	   
+       <input type="password" name="c_password" id="c_password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
+	   
+	   <br/>
+	   <br/>
+	   
 	   <label for="birthdate">birthdate</label>
+	   
        <input type="date" name="birthdate" id="birthdate" required />
-	   <br/><br/>
+	   
+	   <br/>
+	   <br/>
+	   
        <p>Description</p>
+	   
 	   <textarea name="description" id="description" cols="40" rows="5"></textarea>
-	   <br/><br/>
+	   
+	   <br/>
+	   <br/>
+	   
        <input type="submit"value="Register" />
 
    </fieldset>

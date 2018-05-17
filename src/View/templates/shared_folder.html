@@ -3,19 +3,22 @@
 {% block content %}
 <ul>
 		<li><a href="{{ path_for('main') }}">Main</a></li>
+		
 		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
+		
 		<li><a class="active" href="{{ path_for('shared') }}">Shared</a></li>
+		
 		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
+		
 		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		
 		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
-	</ul>
-	<br><br><br>
-	<script>
-	function upload(path){
-			document.write('<form name="f1" action="{{ path_for("rename_file") }}" method="post"><input name="path" value='+path+' type="text"><input name="o_name" value='+o_name+' type="text">	<input name="new_name" value='+new_name+' type="text"></form>');
-			f1.submit();
-		}
-	</script>
+		
+</ul>
+	
+	<br>
+	<br>
+	<br>
 	
 	<table>
    <thead>
@@ -27,14 +30,14 @@
    </thead>
    <tbody> 
        
-	{% for i in content|reverse %}
+	{% for list_data in content|reverse %}
 		
-		{% if i[1] != "s" %}
+		{% if list_data[1] != "dot" %}
 			<tr>
-			<td>{{i[0]}} </td>
-			<td>{{i[1]}} </td>
-			{% if i[1] == "File" %}
-				<td><a href="{{ path_for('download_file')}}?file={{path}}/{{i[0]}}">Download</a> </td>
+			<td>{{list_data[0]}} </td>
+			<td>{{list_data[1]}} </td>
+			{% if list_data[1] == "File" %}
+				<td><a href="{{ path_for('download_file')}}?file={{path}}/{{list_data[0]}}">Download</a> </td>
 			{% endif %}
 			
 			</tr>

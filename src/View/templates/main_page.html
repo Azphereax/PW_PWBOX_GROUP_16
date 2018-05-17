@@ -2,98 +2,107 @@
 {% block title %}	MAIN PAGE{% endblock %}
 {% block content %}
 <ul>
+
 		<li><a class="active" href="{{ path_for('main') }}">Main</a></li>
+		
 		<li><a href="{{ path_for('update_profile') }}">Update</a></li>
+		
 		<li><a href="{{ path_for('shared') }}">Shared</a></li>
+		
 		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
+		
 		<li style="float:right"><a href="{{ path_for('disconnexion') }}">disconnexion</a></li>
+		
 		<li style="float:right"><a class="danger" href="{{ path_for('remove_account') }}">Remove account</a></li>
-	</ul>
-	<br><br><br>
+	
+</ul>
+
+	<br>
+	<br>
+	<br>
 	
 	<script>
-	function rename(path,o_name){
-		var new_name =prompt("New name : ");
-		if(new_name!=""){
-		
-		
-			document.write('<form name="f1" action="{{ path_for("rename_file") }}" method="post"><input name="path" value='+path+' type="text"><input name="o_name" value='+o_name+' type="text">	<input name="new_name" value='+new_name+' type="text"></form>');
-			f1.submit();
-		}
-		else
-			alert("Invalid new name");
-		
+	function upload_file(path){
+		document.write('<form action="{{ path_for("upload_file") }}" method="post" enctype="multipart/form-data"> <input type="file" name="upload_file" id="upload_file"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
 	}
+	
 	function create(path){
 		var name =prompt("Name : ");
 		if(name!=""){
 
-			document.write('<form name="f2" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="name" value='+name+' type="text"></form>');
-			f2.submit();
+			document.write('<form name="fcreate" action="{{ path_for("create_folder") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="name" value='+name+' type="hidden"></form>');
+			fcreate.submit();
 		}
 		else
 			alert("Invalid new name");
 		
-	}
-	
-	function upload_file(path){
-		document.write('<form name="f3" action="{{ path_for("upload_file") }}" method="post" enctype="multipart/form-data"> <input type="file" name="upload_file" id="upload_file"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
 	}
 	
 	function share(path){
 		var email =prompt("User Email : ");
 		if(email!=""){
-			document.write('<form name="f4" action="{{ path_for("share") }}" method="post"> <input name="path" value='+path+' type="text"> <input name="email" value='+email+' type="text"></form>');
-			f4.submit();
+			document.write('<form name="fshare" action="{{ path_for("share") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="email" value='+email+' type="hidden"></form>');
+			fshare.submit();
 		}
 		else
 			alert("Invalid new name");
 		
 	}
 	
+	function rename(path,o_name){
+		var new_name =prompt("New name : ");
+		if(new_name!=""){
+			document.write('<form name="frename" action="{{ path_for("rename_file") }}" method="post"><input name="path" value='+path+' type="hidden"><input name="o_name" value='+o_name+' type="hidden">	<input name="new_name" value='+new_name+' type="hidden"></form>');
+			frename.submit();
+		}
+		else
+			alert("Invalid new name");
+		
+	}
 	</script>
 	
-	
-	
-
 	<table>
    <thead>
+   
        <tr>
-           <th>Content </th>
 		   <th>Type </th>
-		   <th>Action</th>
+           <th>Name </th>
+		   <th>Enter or DL</th>
 		   <th>Remove</th>
 		   <th>Rename</th>
        </tr>
+	   
    </thead>
-   <tbody> 
+   
+   <tbody>
        
-	{% for i in content|reverse %}
-		
-		{% if i[1] != "s" %}
+	{% for list_data in content|reverse %}
+		{% if list_data[1] != "dot" %}
 			<tr>
-			<td>{{i[0]}} </td>
-			<td>{{i[1]}} </td>
-			{% if i[1] == "Folder" %}
-				<td><a href="{{ path_for('main') }}?folder={{i[0]}}">Enter</a> </td>
+			
+			<td>{{list_data[1]}} </td>
+			<td>{{list_data[0]}} </td>
+			
+			
+			{% if list_data[1] == "Folder" %}
+				<td><a href="{{ path_for('main') }}?folder={{list_data[0]}}">Enter</a> </td>
 			{% endif %}
-			{% if i[1] == "File" %}
-				<td><a href="{{ path_for('download_file') }}?file={{i[2]}}/{{i[0]}}">Download</a> </td>
+			
+			{% if list_data[1] == "File" %}
+				<td><a href="{{ path_for('download_file') }}?file={{list_data[2]}}/{{list_data[0]}}">Download</a> </td>
 			{% endif %}
-			<td><a href="{{ path_for('remove_file') }}?remove={{i[2]}}/{{i[0]}}">{{i[0]}}</a>  </td>
-			<td><a href="javascript:rename('{{i[2]}}','{{i[0]}}');">{{i[0]}}</a>  </td>
+			
+			<td><a href="{{ path_for('remove_file') }}?remove={{list_data[2]}}/{{list_data[0]}}">{{list_data[0]}}</a>  </td>
+			<td><a href="javascript:rename('{{list_data[2]}}','{{list_data[0]}}');">{{list_data[0]}}</a>  </td>
+			
 			</tr>
-		{% elseif  i[0] != "." %}
-			<tr>
-				<td colspan="5"><a href="javascript:upload_file('{{i[2]}}');">Upload new file</a> </td>
-			</tr>
-			<tr>
-				<td colspan="5"><a href="javascript:create('{{i[2]}}');">Create new folder</a></td>
-			</tr>
-			<tr>
-				<td colspan="5"><a href="javascript:share('{{i[2]}}');">Share</a> </td>
-			</tr>
+			
+		{% elseif  list_data[0] != "." %}
+			<tr><td colspan="5"><a href="javascript:upload_file('{{list_data[2]}}');">Upload new file</a> </td></tr>
+			<tr><td colspan="5"><a href="javascript:create('{{list_data[2]}}');">Create new folder</a></td></tr>
+			<tr><td colspan="5"><a href="javascript:share('{{list_data[2]}}');">Share</a> </td></tr>
 		{% endif %}
+		
 	{% endfor %}
 	
    </tbody>

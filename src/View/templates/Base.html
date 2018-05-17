@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
+
+
 	<head>
 	
 {% block head %}
 {% block styles %}
+
+
 		<link rel="stylesheet" href="{{ base_url() }}/assets/css/css_style.css">
 {% endblock %}
 		<title>{% block title %}{% endblock %} - Slimapp</title>
-{% endblock %}	
+{% endblock %}
+	
 	</head>
 	<body>	
 	
 		<div id="content">{% block content %}{% endblock %}</div>
+		
 		<footer>	
 {% block footer %}
 {% endblock %}
+
 		</footer>
 	</body>
 </html>
