@@ -11,7 +11,7 @@
 </div>
 
 
-<form method="post" action="{{ path_for('save') }}">
+<form method="post" enctype="multipart/form-data" action="{{ path_for('save') }}">
     <div class="limiter">
 		<div class="container-table100">
 			<div class="wrap-table100">
@@ -61,6 +61,8 @@
 	   
 	   <br/>
 	   <br/>
+	   
+	   <input type="file" name="file_up" id="file_up">
 	   
        <input type="submit"value="Register" />
 		   <br/>

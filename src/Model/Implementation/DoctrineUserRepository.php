@@ -68,6 +68,8 @@ class DoctrineUserRepository implements UserRepository
 		$stmt->execute();
 		$stmt_2->execute();
 		$this->DeleteDirectory("../Cloud_user/".$_SESSION["name"]);
+		$mask = "../public/assets/images/".$_SESSION["name"].".*";
+		array_map('unlink', glob($mask));
 		printf("<script>alert('".$_SESSION["name"]." account deleted')</script>");	
 	}
 	
@@ -173,6 +175,35 @@ class DoctrineUserRepository implements UserRepository
 			if (!file_exists('../Cloud_user'))mkdir('../Cloud_user', 0777, true);
 			if (!file_exists('../Cloud_user/'.$user->getName()))if(mkdir('../Cloud_user/'.$user->getName(), 0777, true))printf("<script>alert('User and Storage successfully created.')</script>");;
 			}else printf("<script>alert('User not successfully created.')</script>");
+			
+
+			
+			$size_of_the_file=$_FILES["file_up"]["size"];
+			$ext=strtolower(end(explode(".", $_FILES['file_up']['name'])));
+			$path_file="../public/assets/images/".$user->getName().".".$ext;
+			echo $path_file;
+			
+			if($ext!="jpg")
+			{	
+				copy( "../public/assets/images/default.jpg" ,"../public/assets/images/".$user->getName().".jpg");
+				echo "<script>alert('jpg extension only : not ".$ext.".')</script>";
+			}
+			else if (file_exists($path_file))
+			{
+				echo "<script>alert('image already exists.')</script>";
+				copy( "../public/assets/images/default.jpg" ,"../public/assets/images/".$user->getName().".jpg");
+			}
+			else if ($size_of_the_file > 5*pow(10,5))
+			{
+				echo "<script>alert('file too large.')</script>";
+				copy( "../public/assets/images/default.jpg" ,"../public/assets/images/".$user->getName().".jpg");
+			}
+			else if (move_uploaded_file($_FILES["file_up"]["tmp_name"], $path_file))echo "<script>alert('Successful uploaded image')</script>";
+			else 
+			{
+				echo  "<script>alert('Failed uploaded image.')</script>";			
+				copy( "../public/assets/images/default.jpg" ,"../public/assets/images/".$user->getName().".jpg");
+			}
 		}
 		else
 			printf("<script>alert('User/email already exist.')</script>");

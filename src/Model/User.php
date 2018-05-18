@@ -10,7 +10,6 @@ private $username;
 private $password;
 private $id;
 
-
 public function __construct($id,$name,$email,$password,$birthdate,$description)
 {
 	$this->name= $name;
