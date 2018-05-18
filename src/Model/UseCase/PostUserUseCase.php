@@ -60,7 +60,7 @@ class PostUserUseCase
 	
 	public function check_user(array $user_check)
 	{
-		$user=new User(null,null,$user_check['email'],$user_check['password'],null,null,null);
+		$user=new User(null,$user_check['name'],null,$user_check['password'],null,null,null);
 		$this->repo->check($user);
 		
 	}

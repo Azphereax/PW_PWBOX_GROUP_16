@@ -18,8 +18,8 @@ class connexion
 		{
 			$data = $request->getParsedBody();
 			$bdd = [];
-			$bdd['email'] = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-			$bdd['password'] = filter_var($data['password'], FILTER_SANITIZE_STRING);	
+			$bdd['name'] = filter_var($data['name'], FILTER_SANITIZE_STRING);
+			$bdd['password'] = filter_var($data['password'], FILTER_SANITIZE_STRING);
 			$service= $this->container->get('post_user_use_case');
 			if(preg_match('/^[A-Za-z0-9]*([A-Z][A-Za-z0-9]*\d|\d[A-Za-z0-9]*[A-Z])[A-Za-z0-9]*$/', $bdd['password']) && (strlen($bdd['password'])<=12) && (strlen($bdd['password'])>=6))
 			{

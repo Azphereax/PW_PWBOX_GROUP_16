@@ -1,29 +1,7 @@
 {% extends "base.html" %}
 {% block title %}	Update{% endblock %}
 {% block content %}
-
-<div id='cssmenu'>
-<ul>
-		<li><a href="{{ path_for('main') }}">Main</a></li>
-		
-		<li><a class="active" href="{{ path_for('update') }}">Update</a></li>
-		
-		
-		<li><a href="{{ path_for('sharing') }}">Shared</a></li>
-				<li style="float:right"><a href="{{ path_for('main') }}"><img  src="{{ base_path}}/assets/images/{{name}}.jpg" height="30" width="30" alt="profile logo"/></a></li>
-		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
-		<li style="float:right"><a href="{{ path_for('logout') }}">logout</a></li>
-		
-		<li style="float:right"><a class="danger" href="{{ path_for('remove') }}">Remove account</a></li>
-		
-</ul>
-</div>
- <form method="post" action="{{ path_for('mod') }}">
-
-   <div class="limiter">
-		<div class="container-table100">
-			<div class="wrap-table100">
-				<div class="table100">
+					 <form method="post" action="{{ path_for('mod') }}">
 					<div class="div_form">
 					<fieldset>
 
@@ -51,7 +29,9 @@
 						<br/>
 					   <br/>
 					</fieldset>
+					
 					</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -59,5 +39,5 @@
 	
 	
    
-</form>
+
 {% endblock %}

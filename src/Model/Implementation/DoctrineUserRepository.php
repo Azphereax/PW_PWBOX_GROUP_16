@@ -93,14 +93,16 @@ class DoctrineUserRepository implements UserRepository
 	public function check(User $user)
 	{
 		
-		$sql="SELECT COUNT(*) AS found_user from users where password=:password and email=:email";
+		$sql="SELECT COUNT(*) AS found_user from users where password=:password and (email=:name || name=:name_2)";
 		$stmt = $this->database->prepare($sql);
-		$stmt->bindValue("email",$user->getEmail(),'string');
+		$stmt->bindValue("name",$user->getName(),'string');
+		$stmt->bindValue("name_2",$user->getName(),'string');
 		$stmt->bindValue("password",$user->getPassword(),'string');
 		
-		$sql_2="SELECT * from users where password=:password and email=:email";
+		$sql_2="SELECT * from users where password=:password and (email=:name || name=:name_2)";
 		$stmt_2 = $this->database->prepare($sql_2);
-		$stmt_2->bindValue("email",$user->getEmail(),'string');
+		$stmt_2->bindValue("name",$user->getName(),'string');
+		$stmt_2->bindValue("name_2",$user->getName(),'string');
 		$stmt_2->bindValue("password",$user->getPassword(),'string');
 		$stmt->execute();
 		if($stmt->fetch()['found_user']){
@@ -139,7 +141,10 @@ class DoctrineUserRepository implements UserRepository
 		
 		
 		if($stmt->execute())
+		{
 			if(strlen($email))$_SESSION['email']=$email;
+			printf("<script>alert('Successful updated')</script>");
+		}
 		else
 			printf("<script>alert('Failed update')</script>");
 		
@@ -179,9 +184,9 @@ class DoctrineUserRepository implements UserRepository
 
 			
 			$size_of_the_file=$_FILES["file_up"]["size"];
-			$ext=strtolower(end(explode(".", $_FILES['file_up']['name'])));
+			$ext=@strtolower(@end(@explode(".", $_FILES['file_up']['name'])));
 			$path_file="../public/assets/images/".$user->getName().".".$ext;
-			echo $path_file;
+			
 			
 			if($ext!="jpg")
 			{	

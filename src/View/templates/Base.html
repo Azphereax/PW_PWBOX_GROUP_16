@@ -20,6 +20,34 @@
 	<link rel="stylesheet" type="text/css" href="{{ base_url() }}/assets/css/main.css">
 {% endblock %}
 		<title>{% block title %}{% endblock %} - Slimapp</title>
+		
+<div id='cssmenu'>
+<ul>
+
+		<li><a href="{{ path_for('main') }}">Main</a></li>
+		
+		<li><a href="{{ path_for('update') }}">Update</a></li>
+		
+		<li><a href="{{ path_for('sharing') }}">Shared</a></li>
+		
+		<li style="float:right"><a href="{{ path_for('main') }}"><img  src="{{ base_path}}/assets/images/{{name}}.jpg" height="30" width="30" alt="profile logo"/></a></li>
+		
+		<li style="float:right"><a href="#">Logged : {{ name }}</a></li>
+		
+		<li style="float:right"><a href="{{ path_for('logout') }}">logout</a></li>
+		
+		
+		<li style="float:right"><a class="danger" href="javascript:remove();">Remove account</a></li>
+	
+</ul>
+</div>
+	
+	
+	
+	<div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100">
 {% endblock %}
 	</head>
 	<body style="background-color:#81F79F;">
@@ -28,8 +56,61 @@
 	<script src="{{ base_url() }}/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 	<script src="{{ base_url() }}/assets/vendor/select2/select2.min.js"></script>
 	<script src="{{ base_url() }}/assets/js/main.js"></script>
-		<div id="content">{% block content %}{% endblock %}</div>
+	<div id="content">{% block content %}{% endblock %}</div>
+	<script>
+	
+	function remove(){
+		if(confirm("You will delete your account , continue ?"))
+		{
+			window.location.href = "{{ path_for('remove') }}";
+		}
+	}
+	
+	
+	function file_up(path){
+		document.write('<form action="{{ path_for("file_up") }}" method="post" enctype="multipart/form-data"> <input type="file" name="file_up" id="file_up"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
+	}
+	
+	function create(path){
+		var name =prompt("Name : ");
+		if(name!=""){
+
+			document.write('<form name="fcreate" action="{{ path_for("folder_new") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="name" value='+name+' type="hidden"></form>');
+			fcreate.submit();
+		}
+		else
+			alert("Invalid new name");
 		
+	}
+	
+	function share(path){
+		var email =prompt("User Email : ");
+		if(email!=""){
+			document.write('<form name="fshare" action="{{ path_for("share") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="email" value='+email+' type="hidden"></form>');
+			fshare.submit();
+		}
+		else
+			alert("Invalid new name");
+		
+	}
+	
+	function rename(path,o_name){
+		var new_name =prompt("New name : ");
+		if(new_name!=""){
+			document.write('<form name="frename" action="{{ path_for("rename") }}" method="post"><input name="path" value='+path+' type="hidden"><input name="o_name" value='+o_name+' type="hidden">	<input name="new_name" value='+new_name+' type="hidden"></form>');
+			frename.submit();
+		}
+		else
+			alert("Invalid new name");
+		
+	}
+	function share_f(chemin)
+	{
+			document.write('<form name="fshare_f" action="{{ path_for("share_f") }}" method="post"><input name="path" value='+chemin+' type="hidden"></form>');
+			fshare_f.submit();
+	}
+	
+	</script>
 		<footer>	
 {% block footer %}
 {% endblock %}
