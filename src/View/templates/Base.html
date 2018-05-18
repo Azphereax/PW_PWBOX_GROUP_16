@@ -86,7 +86,10 @@
 	function share(path){
 		var email =prompt("User Email : ");
 		if(email!=""){
-			document.write('<form name="fshare" action="{{ path_for("share") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="email" value='+email+' type="hidden"></form>');
+			if(document.getElementById('check_role').checked)
+				document.write('<form name="fshare" action="{{ path_for("share") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="email" value='+email+' type="hidden"><input name="selected_role" value=admin type="hidden"></form>');
+			else
+				document.write('<form name="fshare" action="{{ path_for("share") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="email" value='+email+' type="hidden"><input name="selected_role" value=reader type="hidden"></form>');
 			fshare.submit();
 		}
 		else
@@ -104,10 +107,10 @@
 			alert("Invalid new name");
 		
 	}
-	function share_f(chemin)
+	function share_f(chemin,role)
 	{
-			document.write('<form name="fshare_f" action="{{ path_for("share_f") }}" method="post"><input name="path" value='+chemin+' type="hidden"></form>');
-			fshare_f.submit();
+		document.write('<form name="fshare_f" action="{{ path_for("share_f") }}" method="post"><input name="path" value='+chemin+' type="hidden"><input name="sel_rol" value='+role+' type="hidden"></form>');
+		fshare_f.submit();
 	}
 	
 	</script>

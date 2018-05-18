@@ -46,7 +46,14 @@
 		{% elseif  list_data[0] != "." %}
 			<tr><td colspan="5"><a href="javascript:file_up('{{list_data[2]}}');">Upload new file</a> </td></tr>
 			<tr><td colspan="5"><a href="javascript:create('{{list_data[2]}}');">Create new folder</a></td></tr>
-			<tr><td colspan="5"><a href="javascript:share('{{list_data[2]}}');">Share</a> </td></tr>
+			<tr><td colspan="5">
+			<form name="role" id="role" action="javascript:share('{{list_data[2]}}');">
+			
+			<input type="submit" value="SHARE"></input>
+			<label for="name">Admin Role </label>
+			<input type="checkbox" name="check_role" id="check_role">
+			</form>
+			</td></tr>
 		{% endif %}
 		
 	{% endfor %}

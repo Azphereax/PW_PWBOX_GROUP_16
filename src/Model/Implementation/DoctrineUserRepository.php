@@ -34,7 +34,7 @@ class DoctrineUserRepository implements UserRepository
 		return @rmdir($dir);
 	}
 
-	public function save_content($chemin,$cont){
+	public function save_content($chemin,$cont,$mode){
 		
 		$value=@dir($chemin);
 		
@@ -44,7 +44,18 @@ class DoctrineUserRepository implements UserRepository
 			
 			if(!strcmp($fichier,".") || !strcmp($fichier,".."))
 				array_push($cont,array($fichier,"dot",getcwd()."/".rtrim($chemin,'.')));
-			else array_push($cont,array($fichier,(is_dir($chemin."/".$fichier))?"Folder":"File",getcwd()."/".rtrim($chemin,'.')));
+			else 
+			{
+				if(!$mode)
+				{
+					array_push($cont,array($fichier,(is_dir($chemin."/".$fichier))?"Folder":"File",getcwd()."/".rtrim($chemin,'.')));
+				}
+				else 
+				{
+					array_push($cont,array($fichier,(is_dir($chemin."/".$fichier))?"Folder":"File",rtrim($chemin,'.')));
+				}
+			}
+			
 			}
 			$value->close();
 		}
@@ -155,9 +166,14 @@ class DoctrineUserRepository implements UserRepository
 	public function main_access($the_path){
 		
 			$content=[];
+			if($_SESSION['shared_path'])$mode=1;
+			else $mode=0;
+			
+			
 			if($the_path==".")$_SESSION['path']="../Cloud_user/".$_SESSION['name'];
 			$_SESSION['path']=$_SESSION['path']."/".$the_path;
-			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
+			
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content,$mode);
 	}
 	
 	public function save(User $user)
@@ -223,7 +239,10 @@ class DoctrineUserRepository implements UserRepository
 			if(!rename($file['path']."/".$file['o_name'],$file['path']."/".$file['new_name']))echo "<script>alert('Failed rename .');</script>";
 			
 			$cont=[];
-			$_SESSION['content']=$this->save_content($_SESSION['path'],$cont);
+			if($_SESSION['shared_path'])$mode=1;
+			else $mode=0;
+			
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$cont,$mode);
 		}else echo "<script>alert('Failed rename .');</script>";
 			
     }
@@ -266,7 +285,7 @@ class DoctrineUserRepository implements UserRepository
 		$stmt_2->bindValue("folders",$value['path'],'string');
 		$stmt_2->bindValue("owner",$_SESSION['name'],'string');
 		$stmt_2->bindValue("user_share",$value['email'],'string');
-		$stmt_2->bindValue("role","reader",'string');		
+		$stmt_2->bindValue("role",$value['selected_role'] ,'string');
 		
 		$stmt->execute();
 		$result=$stmt->fetch();
@@ -294,13 +313,19 @@ class DoctrineUserRepository implements UserRepository
 			}
 			
 			$content=[];
-			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
+			if($_SESSION['shared_path'])$mode=1;
+			else $mode=0;
+			
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content,$mode);
     }
 		
 	public function create_folder($value){
-			if(!((@mkdir($value['path']."/".$value['name'])))) echo "<script>alert('Failed created folder (no right or already exists)');</script>";		
+		
+			if(!((@mkdir($_SESSION['path']."/".$value['name'])))) echo "<script>alert('Failed created folder ".$_SESSION['path']."(no right or already exists)');</script>";		
+	
+			
 			$content=[];
-			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content,$mode);
     }
 	
 	
@@ -308,8 +333,12 @@ class DoctrineUserRepository implements UserRepository
 	public function shared_folder($value)
 	{
 		$content=[];
-		$_SESSION['content']=$this->save_content($value['path'],$content);
+		if($_SESSION['shared_path'])$mode=1;
+			else $mode=0;
+			
+		$_SESSION['content']=$this->save_content($value['path'],$content,$mode);
 		$_SESSION['path']=$value['path'];
+		print($value['path']);
 	}
 	
 	function transposeData($data)
@@ -327,7 +356,6 @@ class DoctrineUserRepository implements UserRepository
 	public function upload_file($value){
 		
 		$content=[];
-	//	$content
 		$_FILES['file_up']=$this->transposeData($_FILES['file_up']);
 		foreach($_FILES['file_up'] as $file){
 		
@@ -338,15 +366,18 @@ class DoctrineUserRepository implements UserRepository
 		
 		if(($size_of_the_directory+$size_of_the_file)<pow(10,9))
 		{
-			$path_file=$value['path']."/".$file['name'];
+			$path_file=$_SESSION['path']."/".$file['name'];
 			$ext=strtolower(pathinfo($path_file,PATHINFO_EXTENSION));
 			if($ext!="pdf" && $ext!="jpg" && $ext!="png" && $ext!="gif" && $ext!="md" && $ext!="txt")echo "<script>alert('bad file extension.')</script>";
 			else if (file_exists($path_file))echo "<script>alert('file already exists.')</script>";
 			else if ($size_of_the_file > 2*pow(10,6))echo "<script>alert('file too large.')</script>";
 			else if (move_uploaded_file($file["tmp_name"], $path_file))echo "<script>alert('Successful uploaded. Left Cloud place = ".((pow(10,9)-($size_of_the_directory+$size_of_the_file))/pow(10,6))." Mo.')</script>";
-			else echo "<script>alert('Failed uploaded.')</script>";
+			else echo "<script>alert('Failed uploaded to ".$path_file.".')</script>";
 			$content=[];
-			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
+			if($_SESSION['shared_path'])$mode=1;
+			else $mode=0;
+			
+			$_SESSION['content']=$this->save_content($_SESSION['path'],$content,$mode);
 		}else echo "<script>alert('Size limit reached ,only ".(pow(10,9)-($size_of_the_directory+$size_of_the_file))."available')</script>";
     
 		}

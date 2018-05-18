@@ -25,7 +25,9 @@
 			{% if list_data[1] == "File" %}
 				<td class="column1" align="center"><a href="{{ path_for('dl')}}?file={{path}}/{{list_data[0]}}">Download</a> </td>
 			{% endif %}
-			
+			{% if list_data[1] == "Folder" %}
+				<td  class="column1"><a href="{{ path_for('main') }}?folder={{list_data[0]}}">Enter</a> </td>
+			{% endif %}
 			</tr>
 		{% endif %}
 	{% endfor %}

@@ -18,9 +18,10 @@ class Access_main
 		if(isset($_SESSION['connected'])){
 		
 				$get=".";
+				$_SESSION['shared_path']=1;
 				if($data=$request->getParam('folder'))
 				$get=$data;
-			
+				
 				$service= $this->container->get('post_user_use_case');
 				$service->main_access($get);
 				return $this->container->get('view')->render($response,'main_page.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));

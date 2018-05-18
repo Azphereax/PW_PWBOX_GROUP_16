@@ -22,6 +22,7 @@ class share
 				
 				$bdd['email']=filter_var($data['email'], FILTER_SANITIZE_STRING);
 				$bdd['path'] = filter_var($data['path'], FILTER_SANITIZE_STRING);
+				$bdd['selected_role'] = filter_var($data['selected_role'], FILTER_SANITIZE_STRING);
 				
 				if($data){
 					$service= $this->container->get('post_user_use_case');

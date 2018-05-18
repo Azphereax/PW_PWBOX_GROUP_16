@@ -19,10 +19,25 @@ class shared_folder
 		
 				$data = $request->getParsedBody();
 				$bdd=[];
+				$_SESSION['shared_path']=1;
 				$bdd['path'] = filter_var($data['path'], FILTER_SANITIZE_STRING);
+				$bdd['role'] = filter_var($data['sel_rol'], FILTER_SANITIZE_STRING);
 				$service= $this->container->get('post_user_use_case');
-				$service->shared_folder($bdd);
-				return $this->container->get('view')->render($response,'shared_folder.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name'],'path' => $_SESSION['path']));		
+				
+				if(!strcmp($bdd['role'],"reader"))
+				{
+					$service->shared_folder($bdd);
+					return $this->container->get('view')->render($response,'shared_folder.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name'],'path' => $_SESSION['path']));		
+				}
+				else if(!strcmp($bdd['role'],"admin"))
+				{
+					$_SESSION['shared_path']=1;
+					$service->shared_folder($bdd);
+					
+				
+					return $this->container->get('view')->render($response,'main_page.html',array('content' => $_SESSION['content'],'name' => $_SESSION['name']));
+					
+				}	
 			}
 			else
 			{
