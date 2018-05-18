@@ -19,14 +19,19 @@
        
 	{% for list_data in content|reverse %}
 		{% if list_data[1] != "dot" %}
+			
+			{% if list_data[1] == "Folder" %}
+			<tr  ondblclick="window.location.href = '{{ path_for('main') }}?folder={{list_data[0]}}';">
+			{% else%}
 			<tr>
+			{% endif %}
+			
 			
 			<td class="column1">{{list_data[1]}} </td>
 			<td class="column1">{{list_data[0]}} </td>
 			
-			
 			{% if list_data[1] == "Folder" %}
-				<td class="column1"><a href="{{ path_for('main') }}?folder={{list_data[0]}}">Enter</a> </td>
+				<td  class="column1"><a href="{{ path_for('main') }}?folder={{list_data[0]}}">Enter</a> </td>
 			{% endif %}
 			
 			{% if list_data[1] == "File" %}

@@ -14,7 +14,10 @@
 					   <input type="password" name="password" id="password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}"/>
 					   <br/>
 					   <br/>
-					   
+					   <label for="c_password">Confirm password </label>
+						<input type="password" name="c_password" id="c_password" pattern="(?=.*\d)(?=.*[A-Z]).{6,12}" required />
+						<br/>
+					   <br/>
 					   <label for="birthday">birthday </label>
 					   <input type="text" name="birthdate" id="birthdate" value="{{ birthdate }}" disabled/>
 					   <br/>

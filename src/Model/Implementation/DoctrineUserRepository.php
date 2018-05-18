@@ -15,6 +15,7 @@ class DoctrineUserRepository implements UserRepository
 		$this->database = $database;
 	}
 	
+
 	public function DeleteDirectory($dir) 
 	{
 		$the_files = glob($dir . '/*');
@@ -128,9 +129,10 @@ class DoctrineUserRepository implements UserRepository
 		
 		$email=$user->getEmail();
 		
-		if(!strlen($password))$sql = "Update users set email=:email where name=:name";
-		else if(!strlen($email))$sql = "Update users set password=:password where name=:name";
-		else$sql = "Update users set email=:email,password=:password where name=:name";
+		$msg=" mail and password";
+		if(!strlen($password)){$sql = "Update users set email=:email where name=:name";$msg=" email ";}
+		else if(!strlen($email)){$sql = "Update users set password=:password where name=:name";$msg=" password ";}
+		else $sql = "Update users set email=:email,password=:password where name=:name";
 		
 		$stmt = $this->database->prepare($sql);
 		
@@ -143,7 +145,7 @@ class DoctrineUserRepository implements UserRepository
 		if($stmt->execute())
 		{
 			if(strlen($email))$_SESSION['email']=$email;
-			printf("<script>alert('Successful updated')</script>");
+			printf("<script>alert('Successful updated of".$msg." .')</script>");
 		}
 		else
 			printf("<script>alert('Failed update')</script>");
@@ -203,7 +205,7 @@ class DoctrineUserRepository implements UserRepository
 				echo "<script>alert('file too large.')</script>";
 				copy( "../public/assets/images/default.jpg" ,"../public/assets/images/".$user->getName().".jpg");
 			}
-			else if (move_uploaded_file($_FILES["file_up"]["tmp_name"], $path_file))echo "<script>alert('Successful uploaded image')</script>";
+			else if (move_uploaded_file($_FILES["file_up"]["tmp_name"], $path_file));
 			else 
 			{
 				echo  "<script>alert('Failed uploaded image.')</script>";			
@@ -219,7 +221,7 @@ class DoctrineUserRepository implements UserRepository
 	{
 		if(file_exists($file['path']."/".$file['o_name']) && strlen($file['new_name'])>0 && $file['new_name']!='null') {
 			if(!rename($file['path']."/".$file['o_name'],$file['path']."/".$file['new_name']))echo "<script>alert('Failed rename .');</script>";
-			else echo "<script>alert('Sucessfully rename');</script>";
+			
 			$cont=[];
 			$_SESSION['content']=$this->save_content($_SESSION['path'],$cont);
 		}else echo "<script>alert('Failed rename .');</script>";
@@ -281,12 +283,14 @@ class DoctrineUserRepository implements UserRepository
 			
 			
 			if(file_exists($the_path)) {
-				if(is_dir ($the_path))
-					if(!@rmdir($the_path))echo "<script>alert('Failed delete (Not empty) .');</script>";
-					else echo "<script>alert('Sucessfully deleted');</script>";
+				
+				if(is_dir ($the_path)){
+					
+					if(!$this->DeleteDirectory($the_path))echo "<script>alert('Failed delete.');</script>";
+				}
 				else
 					if(!unlink($the_path))echo "<script>alert('Failed delete .');</script>";
-					else echo "<script>alert('Sucessfully deleted');</script>";
+					
 			}
 			
 			$content=[];
@@ -294,10 +298,7 @@ class DoctrineUserRepository implements UserRepository
     }
 		
 	public function create_folder($value){
-			if(@mkdir($value['path']."/".$value['name']))
-				echo "<script>alert('Successful created folder');</script>";
-			else
-				echo "<script>alert('Failed created folder (no right or already exists)');</script>";		
+			if(!((@mkdir($value['path']."/".$value['name'])))) echo "<script>alert('Failed created folder (no right or already exists)');</script>";		
 			$content=[];
 			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
     }
@@ -311,25 +312,45 @@ class DoctrineUserRepository implements UserRepository
 		$_SESSION['path']=$value['path'];
 	}
 	
+	function transposeData($data)
+{
+  $retData = array();
+    foreach ($data as $row => $columns) {
+      foreach ($columns as $row2 => $column2) {
+          $retData[$row2][$row] = $column2;
+      }
+    }
+  return $retData;
+}
+
+
 	public function upload_file($value){
 		
-		$size_of_the_file=$_FILES["file_up"]["size"];
+		$content=[];
+	//	$content
+		$_FILES['file_up']=$this->transposeData($_FILES['file_up']);
+		foreach($_FILES['file_up'] as $file){
+		
+	
+		$size_of_the_file=$file["size"];
 		
 		$size_of_the_directory=$this->DirectorySize("../Cloud_user/".$_SESSION['name']."/");
 		
 		if(($size_of_the_directory+$size_of_the_file)<pow(10,9))
 		{
-			$path_file=$value['path']."/".$_FILES['file_up']['name'];
+			$path_file=$value['path']."/".$file['name'];
 			$ext=strtolower(pathinfo($path_file,PATHINFO_EXTENSION));
 			if($ext!="pdf" && $ext!="jpg" && $ext!="png" && $ext!="gif" && $ext!="md" && $ext!="txt")echo "<script>alert('bad file extension.')</script>";
 			else if (file_exists($path_file))echo "<script>alert('file already exists.')</script>";
 			else if ($size_of_the_file > 2*pow(10,6))echo "<script>alert('file too large.')</script>";
-			else if (move_uploaded_file($_FILES["file_up"]["tmp_name"], $path_file))echo "<script>alert('Successful uploaded. Left Cloud place = ".((pow(10,9)-($size_of_the_directory+$size_of_the_file))/pow(10,6))." Mo.')</script>";
+			else if (move_uploaded_file($file["tmp_name"], $path_file))echo "<script>alert('Successful uploaded. Left Cloud place = ".((pow(10,9)-($size_of_the_directory+$size_of_the_file))/pow(10,6))." Mo.')</script>";
 			else echo "<script>alert('Failed uploaded.')</script>";
 			$content=[];
 			$_SESSION['content']=$this->save_content($_SESSION['path'],$content);
 		}else echo "<script>alert('Size limit reached ,only ".(pow(10,9)-($size_of_the_directory+$size_of_the_file))."available')</script>";
-    }
+    
+		}
+	}
 	
 	public function shared()
 	{

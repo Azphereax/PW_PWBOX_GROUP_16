@@ -68,12 +68,12 @@
 	
 	
 	function file_up(path){
-		document.write('<form action="{{ path_for("file_up") }}" method="post" enctype="multipart/form-data"> <input type="file" name="file_up" id="file_up"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
+		document.write('<form action="{{ path_for("file_up") }}" method="post" enctype="multipart/form-data"> <input type="file" name="file_up[]" multiple id="file_up"><input name="path" value='+path+' type="hidden"><input type="submit" value="upload"></form>');
 	}
 	
 	function create(path){
 		var name =prompt("Name : ");
-		if(name!=""){
+		if(name!="" && name){
 
 			document.write('<form name="fcreate" action="{{ path_for("folder_new") }}" method="post"> <input name="path" value='+path+' type="hidden"> <input name="name" value='+name+' type="hidden"></form>');
 			fcreate.submit();
